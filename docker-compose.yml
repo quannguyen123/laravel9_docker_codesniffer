@@ -1,0 +1,101 @@
+version: '3'
+
+networks:
+  development:
+
+volumes:
+  mysql:
+    driver: local
+  redis:
+    driver: local
+
+services:
+
+  ### Nginx ##############################################
+  nginx:
+    build:
+      context: ./docker/nginx
+      args:
+        - PHP_UPSTREAM_CONTAINER=${NGINX_PHP_UPSTREAM_CONTAINER}
+        - PHP_UPSTREAM_PORT=${NGINX_PHP_UPSTREAM_PORT}
+        - TZ=${WORKSPACE_TIMEZONE}
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "${NGINX_HOST_HTTP_PORT}:80"
+    volumes:
+      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+    depends_on:
+      - php
+    networks:
+      - development
+
+  ### PHP ##############################################
+  php:
+    build:
+      context: ./docker/php
+      args:
+        - PHP_VERSION=${PHP_VERSION}
+        - TZ=${WORKSPACE_TIMEZONE}
+        - WORKDIR=${APP_CODE_PATH_CONTAINER}
+    restart: unless-stopped
+    volumes:
+      - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}
+    networks:
+      - development
+
+  ### MySQL ##############################################
+  mysql:
+      build:
+        context: ./docker/mysql
+        args:
+          - MYSQL_VERSION=${MYSQL_VERSION}
+      restart: unless-stopped
+      tty: true
+      environment:
+        - MYSQL_DATABASE=${MYSQL_DATABASE}
+        - MYSQL_USER=${MYSQL_USER}
+        - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+        - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+        - TZ=${WORKSPACE_TIMEZONE}
+      volumes:
+        - ${DATA_PATH_HOST}/mysql:/var/lib/mysql
+        - ${MYSQL_ENTRYPOINT_INITDB}:/docker-entrypoint-initdb.d
+      ports:
+        - "${MYSQL_PORT}:3306"
+      networks:
+        - development
+
+  ### Redis ##############################################
+  redis:
+    build: ./docker/redis
+    volumes:
+      - ${DATA_PATH_HOST}/redis:/data
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT}:6379"
+    depends_on:
+      - php
+    networks:
+      - development
+
+  ### PhpMyAdmin ##############################################
+  phpmyadmin:
+    build:
+      context: ./docker/phpmyadmin
+      args:
+        - WORKDIR=${APP_CODE_PATH_CONTAINER}
+    restart: always
+    tty: true
+    ports:
+      - "${PHPMYADMIN_PORT}:80"
+    volumes:
+      - ${DATA_PATH_HOST}/phpmyadmin/:/sessions
+    environment:
+      PMA_HOST: mysql
+    depends_on:
+      - php
+      - mysql
+    networks:
+      - development
+
