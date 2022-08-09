@@ -1,2 +1,2 @@
 echo "Create App key.";
-php artisan key:generate --ansi;
+# php artisan key:generate --ansi;
