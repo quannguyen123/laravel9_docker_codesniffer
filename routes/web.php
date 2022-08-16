@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::controller(OrderController::class)->group(function () {
+    Route::get('/orders/{id}', 'show');
+    Route::post('/orders', 'store');
+});
+
 
 Route::get('/', function () {
     return view('welcome');
