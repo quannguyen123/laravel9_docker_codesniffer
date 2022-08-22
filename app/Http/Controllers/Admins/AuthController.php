@@ -3,34 +3,35 @@
 namespace App\Http\Controllers\Admins;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\Admin\LoginRequest;
+use App\Http\Requests\Admin\RegisterRequest;
+use App\Models\Admin;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
     public function showLoginForm() {
         return view('admins.auth.login');
     }
-    public function login() {
-        $login = [
-            'email' => $request->email,
-            'password' => $request->password
-        ];
+    public function login(LoginRequest $request) {
+        $credentials = $request->only('email', 'password');
 
-        if (Auth::guard()->attempt($login)) {
+        if (Auth::guard('admin')->attempt($credentials)) {
+            return 'thanh cong';
             return redirect()->route('top')->with('success', __('top.alert.success'));
         } else {
             return redirect()->back()->with('error', __('login-frontend.messages.error'));
         }
     }
 
-    public function register() {
-        return view('auth.registers.show');
+    public function register() { 
+        return view('admins.auth.register');
     }
-    public function postRegister() {
+    public function postRegister(RegisterRequest $request) {
         $data['name'] = $request->name;
         $data['email'] = $request->email;
-        $data['password'] = bcrypt($request->password);
-        $data['role_id'] = 1;
+        $data['password'] = Hash::make($request->password);
 
         Admin::create($data);
         return redirect()->route('admin-login');

@@ -1,7 +1,5 @@
 <?php
 
-use App\Entities\Admin;
-
 return [
 
     /*
@@ -73,8 +71,8 @@ return [
         ],
 
         'admins' => [
-            'driver' => 'database',
-            'table' => App\Entities\Admin::class,
+            'driver' => 'eloquent',
+            'model' => App\Models\Admin::class,
         ],
     ],
 
