@@ -38,18 +38,22 @@
                   <div class="form-group">
                     <label for="exampleInputEmail1">Username</label>
                     <input type="text" name="name" class="form-control" placeholder="Enter name">
+                    @include('admins.alerts.feedback', ['field' => 'name'])
                   </div>
                   <div class="form-group">
                     <label for="exampleInputEmail1">Email address</label>
                     <input type="email" name="email" class="form-control" placeholder="Enter email">
+                    @include('admins.alerts.feedback', ['field' => 'email'])
                   </div>
                   <div class="form-group">
                     <label for="exampleInputPassword1">Password</label>
                     <input type="password" name="password" class="form-control" placeholder="Password">
+                    @include('admins.alerts.feedback', ['field' => 'password'])
                   </div>
                   <div class="form-group">
                     <label for="exampleInputPassword1">Confirm Password</label>
                     <input type="password" name="password_confirmation" class="form-control" placeholder="Password confirmation">
+                    @include('admins.alerts.feedback', ['field' => 'password_confirmation'])
                   </div>
                   <div class="form-group mb-0">
                     <div class="custom-control custom-checkbox">

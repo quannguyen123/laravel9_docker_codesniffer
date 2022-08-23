@@ -30,6 +30,7 @@
               <div class="card-header">
                 <h3 class="card-title">Quick Example <small>jQuery Validation</small></h3>
               </div>
+              @include('admins.alerts.alert')
               <!-- /.card-header -->
               <!-- form start -->
               <form id="quickForm" action="{{ route('admin-login') }}" method="POST">
