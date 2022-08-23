@@ -22,8 +22,7 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            return Auth::user();
-            return redirect()->route('top')->with('success', __('top.alert.success'));
+            return redirect()->route('home')->with('success', __('top.alert.success'));
         } else {
             return redirect()->back()->with('error', __('login-frontend.messages.error'));
         }

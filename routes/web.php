@@ -4,6 +4,7 @@ use App\Http\Controllers\Admins\AuthController;
 use App\Http\Controllers\Admins\HomeController;
 use App\Http\Controllers\Users\AuthController as UserAuthController;
 use App\Http\Controllers\Users\HomeController as UsersHomeController;
+use App\Http\Controllers\Users\SendMailController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -39,6 +40,7 @@ Route::middleware(['auth:web'])->group(function () {
     Route::get('', [UsersHomeController::class, 'index'])->name('home');
 
     Route::get('logout', [UserAuthController::class, 'logout'])->name('logout');
+    Route::get('send-mail', [SendMailController::class, 'sendMail'])->name('send-mail');
 });
 
 Route::prefix('admin')->group(function() {
