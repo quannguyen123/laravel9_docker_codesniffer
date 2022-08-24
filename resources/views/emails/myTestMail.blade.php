@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>ItsolutionStuff.com</title>
+    <title>Nguyen van Quan</title>
 </head>
 <body>
     <h1>{{ $details['title'] }}</h1>

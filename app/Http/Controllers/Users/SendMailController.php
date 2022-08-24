@@ -15,11 +15,11 @@ class SendMailController extends Controller
     public function sendMail()
     {
         $details = [
-            'title' => 'Mail from ItSolutionStuff.com',
+            'title' => 'Mail from Nguyen van Quan',
             'body' => 'This is for testing email using smtp'
         ];
        
-        \Mail::to('dwx22927@cdfaq.com')->send(new \App\Mail\MyTestMail($details));
+        \Mail::to('xzu85644@nezid.com')->send(new \App\Mail\MyTestMail($details));
        
         dd("Email is Sent.");
     }
