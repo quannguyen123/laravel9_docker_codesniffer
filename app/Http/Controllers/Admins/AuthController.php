@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admins;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\LoginRequest;
-use App\Http\Requests\Admin\RegisterRequest;
+use App\Http\Requests\Admins\LoginRequest;
+use App\Http\Requests\Admins\RegisterRequest;
 use App\Models\Admin;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -13,6 +13,10 @@ class AuthController extends Controller
 {
     public function showLoginForm()
     {
+        if (Auth::guard('admin')->check()) {
+            return redirect()->route('admin-dashboard');
+        }
+
         return view('admins.auth.login');
     }
     public function login(LoginRequest $request)

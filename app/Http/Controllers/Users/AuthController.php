@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\User\LoginRequest;
-use App\Http\Requests\User\RegisterRequest;
+use App\Http\Requests\Users\LoginRequest;
+use App\Http\Requests\Users\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +14,10 @@ class AuthController extends Controller
 {
     public function showLoginForm()
     {
+        if (Auth::guard()->check()) {
+            return redirect()->route('home');
+        }
+
         return view('users.auth.login');
     }
 

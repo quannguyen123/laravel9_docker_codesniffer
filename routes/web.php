@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admins\AuthController;
 use App\Http\Controllers\Admins\HomeController;
+use App\Http\Controllers\Admins\UserController;
 use App\Http\Controllers\Users\AuthController as UserAuthController;
 use App\Http\Controllers\Users\HomeController as UsersHomeController;
 use App\Http\Controllers\Users\SendMailController;
@@ -60,7 +61,21 @@ Route::prefix('admin')->group(function() {
         Route::get('', [HomeController::class, 'dashboard'])->name('admin-dashboard');
 
         Route::get('logout', [AuthController::class, 'logout'])->name('admin-logout');
+
+        Route::prefix('management-user')->group(function() {
+            Route::get('index', [UserController::class, 'index'])->name('admin.user.index');
+            Route::get('create', [UserController::class, 'create'])->name('admin.user.create');
+            Route::post('store', [UserController::class, 'store'])->name('admin.user.store');
+            Route::get('edit/{id}', [UserController::class, 'edit'])->name('admin.user.edit');
+            Route::put('update/{id}', [UserController::class, 'update'])->name('admin.user.update');
+            Route::delete('destroy/{id}', [UserController::class, 'destroy'])->name('admin.user.destroy');
+            
+        });
     });
+});
+
+Route::fallback(function () {
+    return view('404');
 });
 
 
