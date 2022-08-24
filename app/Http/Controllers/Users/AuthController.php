@@ -12,10 +12,12 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function showLoginForm() {
+    public function showLoginForm()
+    {
         return view('users.auth.login');
     }
-    public function login(LoginRequest $request) {
+    public function login(LoginRequest $request)
+    {
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
@@ -27,10 +29,12 @@ class AuthController extends Controller
         return 'user login';
     }
 
-    public function register() {
+    public function register()
+    {
         return view('users.auth.register');
     }
-    public function postRegister(RegisterRequest $request) {
+    public function postRegister(RegisterRequest $request)
+    {
         $data['name'] = $request->name;
         $data['email'] = $request->email;
         $data['password'] = Hash::make($request->password);
@@ -39,17 +43,21 @@ class AuthController extends Controller
         return redirect()->route('user-get-login');
     }
 
-    public function resetPassword() {
+    public function resetPassword()
+    {
 
     }
-    public function sendMailResetPassword() {
+    public function sendMailResetPassword()
+    {
 
     }
     
-    public function formResetPassword() {
+    public function formResetPassword()
+    {
 
     }
-    public function reset() {
+    public function reset()
+    {
 
     }
 }
