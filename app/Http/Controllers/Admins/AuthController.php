@@ -26,7 +26,7 @@ class AuthController extends Controller
         if (Auth::guard('admin')->attempt($credentials)) {
             return redirect()->route('admin-dashboard')->with('success', __('top.alert.success'));
         } else {
-            return redirect()->back()->with('error', __('login-frontend.messages.error'));
+            return redirect()->back()->withInput($credentials)->with('error', __('login-frontend.messages.error'));
         }
     }
 
