@@ -16,13 +16,13 @@ class AuthController extends Controller
     {
         return view('users.auth.login');
     }
+
     public function login(LoginRequest $request)
     {
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
-            return Auth::user();
-            return redirect()->route('top')->with('success', __('top.alert.success'));
+            return redirect()->route('home')->with('success', __('top.alert.success'));
         } else {
             return redirect()->back()->with('error', __('login-frontend.messages.error'));
         }
@@ -33,6 +33,7 @@ class AuthController extends Controller
     {
         return view('users.auth.register');
     }
+
     public function postRegister(RegisterRequest $request)
     {
         $data['name'] = $request->name;
@@ -47,6 +48,7 @@ class AuthController extends Controller
     {
 
     }
+
     public function sendMailResetPassword()
     {
 
@@ -56,8 +58,14 @@ class AuthController extends Controller
     {
 
     }
+
     public function reset()
     {
 
+    }
+
+    public function logout() {
+        Auth::logout();
+        return redirect()->route('user-get-login');
     }
 }

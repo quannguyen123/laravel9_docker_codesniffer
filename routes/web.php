@@ -1,7 +1,10 @@
 <?php
 
 use App\Http\Controllers\Admins\AuthController;
+use App\Http\Controllers\Admins\HomeController;
 use App\Http\Controllers\Users\AuthController as UserAuthController;
+use App\Http\Controllers\Users\HomeController as UsersHomeController;
+use App\Http\Controllers\Users\SendMailController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,41 +22,45 @@ Route::controller(OrderController::class)->group(function () {
     Route::post('/orders', 'store');
 });
 
-Route::controller(UserAuthController::class)->group(function () {
-    Route::get('login', 'showLoginForm')->name('user-get-login');
-    Route::post('login', 'login')->name('user-login');
+// Route::name()->group(function () {
+    Route::get('login', [UserAuthController::class, 'showLoginForm'])->name('user-get-login');
+    Route::post('login', [UserAuthController::class, 'login'])->name('user-login');
 
-    Route::get('register', 'register')->name('user-get-register');
-    Route::post('register', 'postRegister')->name('user-register');
+    Route::get('register', [UserAuthController::class, 'register'])->name('user-get-register');
+    Route::post('register', [UserAuthController::class, 'postRegister'])->name('user-register');
 
-    Route::get('reset-password', 'resetPassword')->name('user-get-reset-password');
-    Route::post('reset-password', 'sendMailResetPassword')->name('user-reset-password');
-    
-    Route::get('reset-password/{token}', 'formResetPassword')->name('user-form-reset-password');
-    Route::post('reset-password/{token}', 'reset')->name('user-confirm-reset-password');
+    Route::get('reset-password', [UserAuthController::class, 'resetPassword'])->name('user-get-reset-password');
+    Route::post('reset-password', [UserAuthController::class, 'sendMailResetPassword'])->name('user-reset-password');
+
+    Route::get('reset-password/{token}', [UserAuthController::class, 'formResetPassword'])->name('user-form-reset-password');
+    Route::post('reset-password/{token}', [UserAuthController::class, 'reset'])->name('user-confirm-reset-password');
+// });
+
+Route::middleware(['auth:web'])->group(function () {
+    Route::get('', [UsersHomeController::class, 'index'])->name('home');
+
+    Route::get('logout', [UserAuthController::class, 'logout'])->name('logout');
+    Route::get('send-mail', [SendMailController::class, 'sendMail'])->name('send-mail');
 });
 
 Route::prefix('admin')->group(function() {
-    Route::controller(AuthController::class)->group(function () {
-        Route::get('login', 'showLoginForm')->name('admin-get-login');
-        Route::post('login', 'login')->name('admin-login');
+    Route::get('login', [AuthController::class, 'showLoginForm'])->name('admin-get-login');
+    Route::post('login', [AuthController::class, 'login'])->name('admin-login');
+
+    Route::get('register', [AuthController::class, 'register'])->name('admin-get-register');
+    Route::post('register', [AuthController::class, 'postRegister'])->name('admin-register');
+
+    Route::get('reset-password', [AuthController::class, 'resetPassword'])->name('admin-get-reset-password');
+    Route::post('reset-password', [AuthController::class, 'sendMailResetPassword'])->name('admin-reset-password');
     
-        Route::get('register', 'register')->name('admin-get-register');
-        Route::post('register', 'postRegister')->name('admin-register');
-    
-        Route::get('reset-password', 'resetPassword')->name('admin-get-reset-password');
-        Route::post('reset-password', 'sendMailResetPassword')->name('admin-reset-password');
-        
-        Route::get('reset-password/{token}', 'formResetPassword')->name('admin-form-reset-password');
-        Route::post('reset-password/{token}', 'reset')->name('admin-confirm-reset-password');
+    Route::get('reset-password/{token}', [AuthController::class, 'formResetPassword'])->name('admin-form-reset-password');
+    Route::post('reset-password/{token}', [AuthController::class, 'reset'])->name('admin-confirm-reset-password');
+
+    Route::middleware(['auth:admin'])->group(function () {
+        Route::get('', [HomeController::class, 'dashboard'])->name('admin-dashboard');
+
+        Route::get('logout', [AuthController::class, 'logout'])->name('admin-logout');
     });
 });
 
 
-
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -20,8 +20,7 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (Auth::guard('admin')->attempt($credentials)) {
-            return 'thanh cong';
-            return redirect()->route('top')->with('success', __('top.alert.success'));
+            return redirect()->route('admin-dashboard')->with('success', __('top.alert.success'));
         } else {
             return redirect()->back()->with('error', __('login-frontend.messages.error'));
         }
@@ -38,13 +37,13 @@ class AuthController extends Controller
         $data['password'] = Hash::make($request->password);
 
         Admin::create($data);
-        return redirect()->route('admin-login');
+        return redirect()->route('admin-login')->withSuccess('Successfully');
     }
 
     public function logout()
     {
         Auth::guard('admin')->logout();
-        return view('auth.login');
+        return redirect()->route('admin-get-login');
     }
 
     public function resetPassword()
