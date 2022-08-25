@@ -22,9 +22,20 @@ class UserService {
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index($request)
     {
-        return $this->repository->all();
+        $filters = [
+            'orderBy' => $request->orderBy,
+            'orderType' => $request->orderType,
+        ];
+
+        if (!empty($request->search)) {
+            $filters['search'] = $request->search;
+        }
+
+        $data['users'] = $this->repository->search($filters);
+
+        return $data;
     }
 
     /**

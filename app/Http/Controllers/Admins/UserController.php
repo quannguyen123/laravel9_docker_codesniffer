@@ -26,13 +26,9 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $admin = auth()->user();
-        if (!$admin->isSuperAdmin()) {
-            return redirect()->route('admin.dashboard');
-        }
-        // $data = $this->adminService->search($request);
-
         $data = $this->userService->index($request);
+
+        return view('admins.management-user.list', ['data' => $data]);
         return $data;
     }
 
@@ -79,6 +75,7 @@ class UserController extends Controller
     {
         $data = $this->adminService->edit($id);
 
+        return $data;
         return view('admin.create', $data);
     }
 

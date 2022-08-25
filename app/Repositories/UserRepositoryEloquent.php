@@ -9,6 +9,7 @@ use App\Repositories\UserRepository;
 // use App\Entities\User;
 use App\Validators\UserValidator;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Arr;
 
 /**
  * Class UserRepositoryEloquent.
@@ -45,20 +46,29 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
         $orderType = Arr::get($filter, 'orderType', '');
         
         /** @var Builder $this */
-        if (in_array($orderType, ['asc', 'desc']) && in_array($orderBy, ['name', 'birthday', 'email', 'created_at'])) {
+        if (in_array($orderType, ['asc', 'desc']) && in_array($orderBy, ['name', 'email', 'created_at'])) {
             $query = $this->orderBy((string)$orderBy, (string)$orderType);
         } else {
             $query = $this->orderBy('id', 'asc');
         }
 
-        if (!empty($filter['email'])) {
-            $query = $query->where('email', 'LIKE', '%' . $filter['email'] . '%');
+        if (!empty($filter['search'])) {
+            // $query = $query->where(function ($query) use ($filter) {
+            //     $query->where('email', 'LIKE', '%'.$filter['search'].'%')
+            //     ->orWhere(DB::raw("CONCAT(first_name,' ',last_name)"), 'LIKE', '%'.$filter['search'].'%')
+            //     ->orWhere(DB::raw("CONCAT(first_name_hira,' ',last_name_hira)"), 'LIKE', '%'.$filter['search'].'%');
+            // });
+
+            $query = $query->where(function ($query) use ($filter) {
+                $query->where('email', 'LIKE', '%'.$filter['search'].'%')
+                ->orWhere('name', 'LIKE', '%'.$filter['search'].'%');
+            });
         }
 
-        $limit = EPaginate::LIMIT->value;
-        if (isset($_COOKIE['limit']) && in_array($_COOKIE['limit'], (array)config('custom.page-limit'))) {
-            $limit = $_COOKIE['limit'];
-        }
+        $limit = 2;
+        // if (isset($_COOKIE['limit']) && in_array($_COOKIE['limit'], (array)config('custom.page-limit'))) {
+        //     $limit = $_COOKIE['limit'];
+        // }
 
         return $query->paginate($limit);
     }
