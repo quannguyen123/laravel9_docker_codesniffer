@@ -221,6 +221,7 @@
 <!-- AdminLTE for demo purposes -->
 <script src="{{ asset('asset/admin/dist/js/demo.js') }}"></script>
 <!-- Page specific script -->
+<script src="{{ mix('asset/admin/dist/js/app.js') }}"></script>
 
 </script>
 </body>

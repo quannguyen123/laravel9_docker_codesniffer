@@ -65,22 +65,43 @@
                               #
                           </th>
                           <th style="width: 20%">
-                              Name
-                              <div class="">
+                            <div class="row justify-content-between">
+                              <div class="col-11">
+                                Name
+                              </div>
+                              <div class="col-1">
                                 <div class="col-12">
-                                    <a href="{{ request()->fullUrlWithQuery(['orderBy' => 'created_at', 'orderType' => 'asc']) }}">
-                                        <img src="{{asset('admin/img/icons/icon-up.svg')}}" />
+                                    <a href="{{ request()->fullUrlWithQuery(['orderBy' => 'name', 'orderType' => 'asc']) }}">
+                                    <i class="fas fa-angle-up"></i>
                                     </a>
                                 </div>
                                 <div class="col-12">
-                                    <a href="{{ request()->fullUrlWithQuery(['orderBy' => 'created_at', 'orderType' => 'desc']) }}">
-                                        <img src="{{asset('admin/img/icons/icon-down.svg')}}" />
+                                    <a href="{{ request()->fullUrlWithQuery(['orderBy' => 'name', 'orderType' => 'desc']) }}">
+                                    <i class="fas fa-angle-down"></i>
                                     </a>
                                 </div>
                               </div>
+                            </div>
+                              
                           </th>
                           <th style="width: 30%">
+                            <div class="row justify-content-between">
+                              <div class="col-11">
                               Email
+                              </div>
+                              <div class="col-1">
+                                <div class="col-12">
+                                    <a href="{{ request()->fullUrlWithQuery(['orderBy' => 'email', 'orderType' => 'asc']) }}">
+                                    <i class="fas fa-angle-up"></i>
+                                    </a>
+                                </div>
+                                <div class="col-12">
+                                    <a href="{{ request()->fullUrlWithQuery(['orderBy' => 'email', 'orderType' => 'desc']) }}">
+                                    <i class="fas fa-angle-down"></i>
+                                    </a>
+                                </div>
+                              </div>
+                            </div>
                           </th>
                           <th style="width: 8%" class="text-center">
                               Status
@@ -126,11 +147,22 @@
                                   </i>
                                   Edit
                               </a>
-                              <a class="btn btn-danger btn-sm" href="{{ route('admin.user.destroy', $user->id) }}">
+                              <a class="btn btn-danger btn-sm" 
+                              data-href="{{ route('admin.user.destroy', $user->id) }}" 
+                              data-action="show-confirm-modal">
                                   <i class="fas fa-trash">
                                   </i>
                                   Delete
                               </a>
+
+                              <!-- <a data-action="confirm-delete"
+                                  data-url="{{route('admin.admin.management.destroy', $admin->id)}}"
+                                  data-id="{{$admin->id}}"
+                                  data-title="{{__('admin.modal.delete.title')}}"
+                                  data-content="{{__('admin.modal.delete.content')}}"
+                              >
+                                  <img src="/admin/img/icons/common/trash.svg">
+                              </a> -->
                           </td>
                       </tr>
                     @endforeach
