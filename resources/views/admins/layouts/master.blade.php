@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="{{ asset('asset/admin/plugins/fontawesome-free/css/all.min.css') }}">
   <!-- Theme style -->
   <link rel="stylesheet" href="{{ asset('asset/admin/dist/css/adminlte.min.css') }}">
+  <meta name="csrf-token" content="{{ csrf_token() }}" />
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -221,6 +222,8 @@
 <!-- AdminLTE for demo purposes -->
 <script src="{{ asset('asset/admin/dist/js/demo.js') }}"></script>
 <!-- Page specific script -->
+
+<script src="{{ asset('asset/admin/dist/js/custom.js') }}"></script>
 
 </script>
 </body>

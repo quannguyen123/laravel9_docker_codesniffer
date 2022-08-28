@@ -102,6 +102,7 @@ ARG WORKDIR="/usr/share/nginx/html"
 
 WORKDIR ${WORKDIR}
 
+RUN chown -Rf root:root /usr/share/nginx/html/
 CMD ["php-fpm"]
 
 EXPOSE 9000

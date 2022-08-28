@@ -94,7 +94,7 @@
                   </thead>
                   <tbody>
                     @foreach($data['users'] as $user)
-                      <tr>
+                      <tr class="item-{{ $user->id }}">
                           <td>
                             {{ $user->id }}
                           </td>
@@ -126,11 +126,25 @@
                                   </i>
                                   Edit
                               </a>
-                              <a class="btn btn-danger btn-sm" href="{{ route('admin.user.destroy', $user->id) }}">
-                                  <i class="fas fa-trash">
-                                  </i>
-                                  Delete
-                              </a>
+
+                              <td>
+                                  <a href="#" 
+                                      class="btn btn-danger btn-sm modal-delete" 
+                                      data-id={{ $user->id }}
+                                      data-href="{{ route('admin.user.destroy', $user->id) }}"
+                                      data-method="delete"
+                                      data-toggle="modal"
+                                      data-title="Title confirm"
+                                      data-description="Description confirm"
+                                      data-btnNo="Cancel"
+                                      data-btnYes="Delete"
+                                      data-target="#modalConfirm">
+                                    <i class="fas fa-trash"></i>
+                                    Delete
+                                  </a>
+                              </td>
+
+
                           </td>
                       </tr>
                     @endforeach
@@ -151,5 +165,8 @@
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
+
+  <!-- Delete Warning Modal -->
+  @include('admins.layouts.modal-confirm')
 
 @endsection
