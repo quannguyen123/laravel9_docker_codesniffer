@@ -101,7 +101,8 @@ class UserController extends Controller
     public function destroy($id)
     {
         return \response()->json([
-            'status' => $this->adminService->destroy($id)
+            'status' => $this->userService->destroy($id),
+            'id' => $id
         ]);
     }
 }
