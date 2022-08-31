@@ -37,3 +37,27 @@ $(".modal-action-yes").on("click", function(){
 
     $("#modalConfirm").modal('hide');
 });
+
+$('.pagination_select').on('change', '', function (e) {
+    let limit = $('.pagination_select').val();
+    let href = $(this).attr('data-href');
+    let method = $(this).attr('data-method');
+
+    $.ajax({
+        headers : {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        type: method,
+        url: href,
+        data: {
+            limit: limit
+        },
+        dataType:"json",
+        success: function(response){
+            if(response.status == 200) {
+                location.reload();
+            }
+        }
+    });
+});
+

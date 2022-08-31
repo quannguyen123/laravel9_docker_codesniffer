@@ -61,6 +61,8 @@ Route::prefix('admin')->group(function() {
         Route::get('', [HomeController::class, 'dashboard'])->name('admin-dashboard');
 
         Route::get('logout', [AuthController::class, 'logout'])->name('admin-logout');
+        
+        Route::post('/set-cookie', [HomeController::class, 'setCookie'])->name('admin.set-cookie');
 
         Route::prefix('management-user')->group(function() {
             Route::get('index', [UserController::class, 'index'])->name('admin.user.index');

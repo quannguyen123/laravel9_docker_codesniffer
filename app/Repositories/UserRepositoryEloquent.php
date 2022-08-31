@@ -10,6 +10,7 @@ use App\Repositories\UserRepository;
 use App\Validators\UserValidator;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Cookie;
 
 /**
  * Class UserRepositoryEloquent.
@@ -65,10 +66,11 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
             });
         }
 
-        $limit = 2;
-        // if (isset($_COOKIE['limit']) && in_array($_COOKIE['limit'], (array)config('custom.page-limit'))) {
-        //     $limit = $_COOKIE['limit'];
-        // }
+        $limit = config('custom.paginate');
+
+        if (!empty(Cookie::get('limit')) && in_array(Cookie::get('limit'), (array)config('custom.page-limit'))) {
+            $limit = Cookie::get('limit');
+        }
 
         return $query->paginate($limit);
     }

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admins;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 
 class HomeController extends Controller
 {
@@ -17,6 +17,16 @@ class HomeController extends Controller
     {
         return view('admins.home');
         // return view('welcome');
+    }
+
+    public function setCookie(Request $request) {
+        $request = $request->only('limit', 'password');
+
+        foreach($request as $key => $item) {
+            Cookie::queue($key, $item, 10);
+        }
+
+        return response(['status' => 200]);
     }
 
     /**
