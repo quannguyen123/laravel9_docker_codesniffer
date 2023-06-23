@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class AuthController extends Controller
 {
@@ -44,7 +45,15 @@ class AuthController extends Controller
         $data['email'] = $request->email;
         $data['password'] = Hash::make($request->password);
 
-        User::create($data);
+        $user = User::create($data);
+
+        $user->assignRole('user');
+
+        // // $permission = Permission::create(['name' => 'edit articles2']);
+        // // $role->givePermissionTo($permission);
+        // // $user->givePermissionTo('edit articles2'); 
+        // $user->revokePermissionTo('edit articles'); 
+
         return redirect()->route('user-get-login');
     }
 

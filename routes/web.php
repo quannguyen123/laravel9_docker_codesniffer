@@ -76,6 +76,13 @@ Route::prefix('admin')->group(function() {
     });
 });
 
+
+Route::group(['middleware' => ['role:admin']], function () {
+    Route::get('test-admin', function() {
+        return 'tai khoan phan quyen admin';
+    });
+});
+
 Route::fallback(function () {
     return view('404');
 });

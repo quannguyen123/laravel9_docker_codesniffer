@@ -111,6 +111,12 @@ return [
     |
     */
 
+    'api' => [
+        'driver' => 'token',
+        'provider' => 'users',
+        'hash' => true,
+    ],
+
     'password_timeout' => 10800,
 
 ];
