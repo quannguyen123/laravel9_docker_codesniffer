@@ -40,7 +40,9 @@ class AuthController extends Controller
         $data['email'] = $request->email;
         $data['password'] = Hash::make($request->password);
 
-        Admin::create($data);
+        $admin = Admin::create($data);
+        $admin->assignRole('admin');
+
         return redirect()->route('admin-login')->withSuccess('Successfully');
     }
 

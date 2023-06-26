@@ -10,8 +10,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class Admin extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
-    use HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, HasApiTokens;
 
     /**
      * The table associated with the model.

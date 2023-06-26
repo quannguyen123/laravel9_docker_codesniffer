@@ -10,3 +10,7 @@ docker-compose up -d
 docker exec -it container_name bash
 composer install
 php artisan key:generate
+
+api
+php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
+
