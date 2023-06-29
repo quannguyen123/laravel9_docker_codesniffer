@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admins\ManagerAccountController;
-use App\Http\Controllers\Admins\RegisterController;
+use App\Http\Controllers\Api\Admin\AuthController as AdminAuthController;
+use App\Http\Controllers\Api\Partner\AuthController;
+use App\Http\Controllers\Api\User\AuthController as UserAuthController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,20 +17,41 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::controller(RegisterController::class)->group(function(){
-    Route::post('register', 'register');
-    Route::post('login', 'login');
-});
 
-Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('manager-account', [ManagerAccountController::class, 'index']);
+// Route::post('partner/register', [AuthController::class, 'register']);
+// Route::post('partner/login', [AuthController::class, 'login'])->name('login');
 
-    // Route::prefix('management-user')->group(function() {
-    //     Route::get('index', [UserController::class, 'index'])->name('');
-        
-    // });
-});
+// Route::group( ['prefix' => 'partner', 'middleware' => ['auth:api-partner'] ],function(){
+//     Route::post('test', function() {
+//         return 'trang chu hr';
+//     });
+// });
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return 'màn hình user';
-});
+
+// Route::group( ['prefix' => 'partner2', 'middleware' => ['auth:api-user'] ],function(){
+//     Route::post('test', function() {
+//         return 'trang chu hr2';
+//     });
+// });
+
+
+// Route::post('admin/register', [AdminAuthController::class, 'register']);
+// Route::post('admin/login', [AdminAuthController::class, 'login'])->name('login');
+
+// // Route::group(['prefix' => 'admin', 'middleware' => ['auth:api-user'] ],function(){
+// Route::group(['prefix' => 'admin', 'middleware' => ['auth:api-admin', 'role:admin'] ],function(){
+//     Route::post('test', function() {
+//         return 'trang chu admin';
+//     });
+// });
+
+
+
+// Route::post('user/register', [UserAuthController::class, 'register']);
+// Route::post('user/login', [UserAuthController::class, 'login'])->name('login');
+
+// Route::group(['prefix' => 'user', 'middleware' => ['auth:api-user']],function(){
+//     Route::post('test', function() {
+//         return 'trang chu user';
+//     });
+// });

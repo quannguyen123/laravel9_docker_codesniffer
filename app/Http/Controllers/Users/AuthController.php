@@ -31,7 +31,6 @@ class AuthController extends Controller
         } else {
             return redirect()->back()->with('error', __('login-frontend.messages.error'));
         }
-        return 'user login';
     }
 
     public function register()

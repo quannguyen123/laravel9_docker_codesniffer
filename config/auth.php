@@ -45,6 +45,36 @@ return [
             'driver' => 'session',
             'provider' => 'admins',
         ],
+
+        'partner' => [
+            'driver' => 'session',
+            'provider' => 'partners2',
+        ],
+
+        'partner2' => [
+            'driver' => 'session',
+            'provider' => 'partners',
+        ],
+
+        'api-admin' => [
+            'driver' => 'passport',
+            'provider' => 'admins',
+        ],
+
+        'api-user' => [
+            'driver' => 'passport',
+            'provider' => 'users',
+        ],
+
+        'api-partner' => [
+            'driver' => 'passport',
+            'provider' => 'partners',
+        ],
+
+        'api-partner2' => [
+            'driver' => 'passport',
+            'provider' => 'partners2',
+        ]
     ],
 
     /*
@@ -74,6 +104,16 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Admin::class,
         ],
+
+        'partners' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Partner::class,
+        ],
+
+        'partners2' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Partner::class,
+        ],
     ],
 
     /*
@@ -94,6 +134,18 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'admins' => [
+            'provider' => 'admins',
+            'table' => 'password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'partners' => [
+            'provider' => 'partners',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,

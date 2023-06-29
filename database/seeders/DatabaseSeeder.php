@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         Role::create(['name' => 'admin']);
-        Role::create(['name' => 'hr']);
+        Role::create(['name' => 'partner']);
         Role::create(['name' => 'user']);
         // Permission::create(['name' => 'edit articles2']);
     }

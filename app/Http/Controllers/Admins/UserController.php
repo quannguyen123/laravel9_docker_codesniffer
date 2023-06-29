@@ -73,10 +73,9 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        $data = $this->adminService->edit($id);
+        $data = $this->userService->edit($id);
 
-        return $data;
-        return view('admin.create', $data);
+        return view('admins.management-user.add', $data);
     }
 
     /**
@@ -88,7 +87,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->adminService->update($request, $id);
+        $this->userService->update($request, $id);
         return redirect()->route('admin.admin.management.index')->withSuccess(__('admin.message.update-success'));
     }
 

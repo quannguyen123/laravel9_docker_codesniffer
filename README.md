@@ -14,3 +14,5 @@ php artisan key:generate
 api
 php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
 
+php artisan config:cache
+php artisan config:clear

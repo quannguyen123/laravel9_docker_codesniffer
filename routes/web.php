@@ -18,10 +18,10 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::controller(OrderController::class)->group(function () {
-    Route::get('/orders/{id}', 'show');
-    Route::post('/orders', 'store');
-});
+// Route::controller(OrderController::class)->group(function () {
+//     Route::get('/orders/{id}', 'show');
+//     Route::post('/orders', 'store');
+// });
 
 // Route::name()->group(function () {
     Route::get('login', [UserAuthController::class, 'showLoginForm'])->name('user-get-login');
@@ -77,7 +77,7 @@ Route::prefix('admin')->group(function() {
 });
 
 
-Route::group(['middleware' => ['role:admin']], function () {
+Route::group(['middleware' => ['auth:admin', 'role:admin']], function () {
     Route::get('test-admin', function() {
         return 'tai khoan phan quyen admin';
     });

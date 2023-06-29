@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Admins;
 
 use App\Http\Controllers\BaseController;
+use App\Models\Admin;
 use Illuminate\Http\Request;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -25,9 +25,9 @@ class RegisterController extends BaseController
    
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
-        $user = User::create($input);
-        $success['token'] =  $user->createToken('MyApp')->plainTextToken;
-        $success['name'] =  $user->name;
+        $admin = Admin::create($input);
+        $success['token'] =  $admin->createToken('MyApp')->accessToken;
+        $success['name'] =  $admin->name;
    
         return $this->sendResponse($success, 'User register successfully.');
     }
@@ -39,12 +39,11 @@ class RegisterController extends BaseController
      */
     public function login(Request $request)
     {
-        if(Auth::attempt(['email' => $request->email, 'password' => $request->password])){ 
-            $user = Auth::user(); 
-            // $success['token'] =  $user->createToken('MyApp')->plainTextToken; 
-            // $success['name'] =  $user->name;
-
-            $success = $user;
+        if((Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password]))){
+            $adminId = Auth::guard('admin')->user()->id;
+            $admin = Admin::find($adminId);
+            $success['token'] = $admin->createToken('MyApp')->accessToken;
+            $success['name'] = $admin->name;
             
             return $this->sendResponse($success, 'User login successfully.');
         } 

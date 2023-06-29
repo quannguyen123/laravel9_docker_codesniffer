@@ -23,7 +23,7 @@ class Authenticate extends Middleware
             if($request->guard == 'web') {
                 return route('user-get-login');
             }
-            return route('login');
+            // return route('login');
         }
     }
 
@@ -51,6 +51,29 @@ class Authenticate extends Middleware
                 'Unauthenticated.', $guards, $this->redirectTo($request)
             );
         }
-        
+
+        if (in_array('api-admin', $guards)) {
+            $request->guard = 'api-admin';
+            throw new AuthenticationException(
+                'Unauthenticated.', $guards, $this->redirectTo($request)
+            );
+        }
+
+        if (in_array('api-user', $guards)) {
+            $request->guard = 'api-user';
+            throw new AuthenticationException(
+                'Unauthenticated.', $guards, $this->redirectTo($request)
+            );
+        }
+
+        if (in_array('api-partner', $guards)) {
+            $request->guard = 'api-partner';
+            throw new AuthenticationException(
+                'Unauthenticated.', $guards, $this->redirectTo($request)
+            );
+        }
+
+        // dd($guards);
+        // return route('apiLogin');
     }
 }
