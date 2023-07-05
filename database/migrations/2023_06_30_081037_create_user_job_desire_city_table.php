@@ -18,8 +18,8 @@ return new class extends Migration
             $table->unsignedBigInteger('user_job_desire_id');
             $table->foreign('user_job_desire_id')->references('id')->on('user_job_desires');
             
-            $table->unsignedBigInteger('city_id');
-            $table->foreign('city_id')->references('id')->on('cities');
+            $table->unsignedBigInteger('province_id');
+            $table->foreign('province_id')->references('id')->on('provinces')->cascadeOnDelete();
         });
     }
 

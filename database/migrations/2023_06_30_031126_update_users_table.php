@@ -27,8 +27,8 @@ return new class extends Migration
             $table->tinyInteger('nation')->nullable()->comment('quốc gia');
             $table->tinyInteger('marital_status')->nullable()->comment('tình trạng hôn nhân');
             
-            $table->unsignedBigInteger('city_id');
-            $table->foreign('city_id')->references('id')->on('cities');
+            $table->unsignedBigInteger('province_id');
+            $table->foreign('province_id')->references('id')->on('provinces')->cascadeOnDelete();
             
             $table->unsignedBigInteger('district_id');
             $table->foreign('district_id')->references('id')->on('districts');
@@ -46,7 +46,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('first_name');
             $table->dropColumn('last_name');
             $table->dropColumn('status');
@@ -60,9 +60,9 @@ return new class extends Migration
             $table->dropColumn('birthday');
             $table->dropColumn('nation');
             $table->dropColumn('marital_status');
-            $table->dropColumn('city_id');
-            $table->dropColumn('city_id');
-            $table->dropColumn('district_id');
+            $table->dropForeign(['province_id']);
+            $table->dropColumn('province_id');
+            $table->dropForeign(['district_id']);
             $table->dropColumn('district_id');
             $table->dropColumn('address');
         });

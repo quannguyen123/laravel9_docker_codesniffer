@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateDistrictsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -14,10 +14,11 @@ return new class extends Migration
     public function up()
     {
         Schema::create('districts', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('name', 255)->comment('tên quận huyện');
-            $table->unsignedBigInteger('city_id');
-            $table->foreign('city_id')->references('id')->on('cities');
+            $table->id();
+            $table->string('name');
+            $table->string('gso_id');
+            $table->unsignedBigInteger('province_id');
+            $table->foreign('province_id')->references('id')->on('provinces')->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -31,4 +32,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('districts');
     }
-};
+}
