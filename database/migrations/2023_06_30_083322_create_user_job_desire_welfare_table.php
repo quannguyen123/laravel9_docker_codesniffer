@@ -13,14 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('user_job_desire_welfare', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
-            $table->timestamps();
+            $table->unsignedBigInteger('user_job_desire_id');
+            $table->foreign('user_job_desire_id')->references('id')->on('user_job_desires');
+            
+            $table->unsignedBigInteger('welfare_id');
+            $table->foreign('welfare_id')->references('id')->on('welfares');
         });
     }
 
@@ -31,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('user_job_desire_welfare');
     }
 };

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Partner\AuthController;
+use App\Http\Controllers\Api\Partner\PartnerManagementController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,13 +26,11 @@ Route::group( ['prefix' => 'partner', 'middleware' => ['auth:api-user', 'role:pa
     Route::post('logout', [AuthController::class, 'logout']);
 
     Route::prefix('partner-management')->group(function() {
-        Route::get('index', [UserController::class, 'index'])->name('admin.user.index');
-        Route::get('create', [UserController::class, 'create'])->name('admin.user.create');
-        Route::post('store', [UserController::class, 'store'])->name('admin.user.store');
-        Route::get('edit/{id}', [UserController::class, 'edit'])->name('admin.user.edit');
-        Route::put('update/{id}', [UserController::class, 'update'])->name('admin.user.update');
-        Route::delete('destroy/{id}', [UserController::class, 'destroy'])->name('admin.user.destroy');
-        
+        Route::get('index', [PartnerManagementController::class, 'index'])->name('admin.user.index');
+        Route::get('detail/{id}', [PartnerManagementController::class, 'detail'])->name('admin.user.index');
+        Route::post('store', [PartnerManagementController::class, 'store'])->name('admin.user.store');
+        Route::put('update/{id}', [PartnerManagementController::class, 'update'])->name('admin.user.update');
+        Route::delete('destroy/{id}', [PartnerManagementController::class, 'destroy'])->name('admin.user.destroy');
     });
 
 });

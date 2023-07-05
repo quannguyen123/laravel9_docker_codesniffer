@@ -13,13 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('reference_persons', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            $table->string('name', 100)->comment('Tên người tham khảo');
+            $table->string('job_title', 100)->nullable()->comment('chức danh');
+            $table->string('email', 50)->nullable()->comment('email người tham khảo');
+            $table->string('number_phone', 15)->nullable()->comment('sdt người tham khảo');
+
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('reference_persons');
     }
 };

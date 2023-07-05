@@ -13,13 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('languages', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            $table->string('name', 100)->comment('Tên ngôn ngữ');
+            $table->tinyInteger('status')->nullable()->comment('trạng thái');
+
+            $table->string('created_by', 20)->nullable();
+            $table->string('updated_by', 20)->nullable();
+            $table->string('deleted_by', 20)->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -31,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('languages');
     }
 };
