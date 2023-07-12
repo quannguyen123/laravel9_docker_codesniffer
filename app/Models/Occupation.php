@@ -27,6 +27,7 @@ class Occupation extends Model implements Transformable
     protected $fillable = [
         'name',
         'slug',
+        'status',
         'parent_id',
         'created_by',
         'updated_by',

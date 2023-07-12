@@ -2,20 +2,20 @@
 
 namespace App\Repositories;
 
-use App\Models\User;
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
-use App\Repositories\UserRepository;
+use App\Repositories\WelfareRepository;
+use App\Models\Welfare;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Cookie;
 
 /**
- * Class UserRepositoryEloquent.
+ * Class WelfareRepositoryEloquent.
  *
  * @package namespace App\Repositories;
  */
-class UserRepositoryEloquent extends BaseRepository implements UserRepository
+class WelfareRepositoryEloquent extends BaseRepository implements WelfareRepository
 {
     /**
      * Specify Model class name
@@ -24,8 +24,10 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
      */
     public function model()
     {
-        return User::class;
+        return Welfare::class;
     }
+
+    
 
     /**
      * Boot up the repository, pushing criteria
@@ -34,7 +36,7 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
     {
         $this->pushCriteria(app(RequestCriteria::class));
     }
-    
+
     /**
      * @param array $filter
      * @return LengthAwarePaginator
@@ -66,4 +68,5 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
 
         return $query->paginate($limit);
     }
+    
 }

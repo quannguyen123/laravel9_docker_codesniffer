@@ -26,6 +26,9 @@ class CreateAdminsTable extends Migration
             $table->tinyInteger('status')->nullable()->comment('trạng thái admin');
             $table->softDeletes();
             $table->rememberToken();
+			$table->string('created_by', 20)->nullable();
+            $table->string('updated_by', 20)->nullable();
+            $table->string('deleted_by', 20)->nullable();
             $table->timestamps();
 		});
 	}

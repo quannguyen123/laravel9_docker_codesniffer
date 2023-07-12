@@ -63,3 +63,18 @@ function convert_str($str) {
     $str = preg_replace("/( )/", '-', $str);
     return $str;
 }
+
+function removeImage($folder, $imageName) {
+    if (empty($imageName)) {
+        return;
+    }
+    $path_image = $_SERVER['DOCUMENT_ROOT'] . '\images';
+    if (!empty($folder)) {
+        $path_image = $path_image . '\\' . $folder;
+    }
+    $path_image = $path_image . '\\' . $imageName;
+
+    if (file_exists($path_image)) {
+        unlink($path_image);
+    }
+}

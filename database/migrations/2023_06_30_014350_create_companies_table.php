@@ -26,6 +26,9 @@ return new class extends Migration
             $table->string('video', 255)->nullable()->comment('link video youtube');
             $table->tinyInteger('status')->nullable()->comment('trạng thái công ty');
             $table->softDeletes();
+            $table->string('created_by', 20)->nullable();
+            $table->string('updated_by', 20)->nullable();
+            $table->string('deleted_by', 20)->nullable();
             $table->timestamps();
         });
     }

@@ -25,6 +25,10 @@ return new class extends Migration
             $table->string('note', 255)->nullable()->comment('hình ảnh mô tả');
             $table->tinyInteger('status')->nullable()->comment('trạng thái dịch vụ');
             
+            $table->string('created_by', 20)->nullable();
+            $table->string('updated_by', 20)->nullable();
+            $table->string('deleted_by', 20)->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

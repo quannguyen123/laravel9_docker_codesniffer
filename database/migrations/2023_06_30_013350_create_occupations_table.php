@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name', 100)->comment('Tên ngành nghề');
             $table->string('slug', 100)->comment('link ngành nghề');
             $table->bigInteger('parent_id')->nullable()->comment('ngành nghề cha');
+            $table->tinyInteger('status')->nullable()->comment('trạng thái user');
             $table->string('created_by', 20)->nullable();
             $table->string('updated_by', 20)->nullable();
             $table->string('deleted_by', 20)->nullable();
