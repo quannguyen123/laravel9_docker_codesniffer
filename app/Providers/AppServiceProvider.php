@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repositories\OccupationRepository;
+use App\Repositories\OccupationRepositoryEloquent;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -23,6 +25,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->app->bind(OccupationRepository::class, OccupationRepositoryEloquent::class);
     }
 }
