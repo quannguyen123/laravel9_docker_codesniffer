@@ -14,11 +14,11 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('first_name', 50)->comment('họ');
-            $table->string('last_name', 50)->comment('tên');
+            $table->string('first_name', 50)->nullable()->comment('họ');
+            $table->string('last_name', 50)->nullable()->comment('tên');
             $table->string('code', 50)->unique()->nullable();
             $table->tinyInteger('gender')->nullable()->comment('hiển thị thông tin người nhân cv');
-            $table->string('job_title', 255)->comment('link sub');
+            $table->string('job_title', 255)->nullable()->comment('link sub');
             $table->tinyInteger('current_rank')->nullable()->comment('cấp bậc hiện tại');
             $table->string('experience', 2)->nullable()->comment('năm kinh nghiệm');
             $table->tinyInteger('highest_degree')->nullable()->comment('bằng cấp cao nhất');
@@ -28,7 +28,7 @@ return new class extends Migration
             $table->tinyInteger('marital_status')->nullable()->comment('tình trạng hôn nhân');
             
             $table->unsignedBigInteger('province_id');
-            $table->foreign('province_id')->references('id')->on('provinces')->cascadeOnDelete();
+            $table->foreign('province_id')->references('id')->on('provinces');
             
             $table->unsignedBigInteger('district_id');
             $table->foreign('district_id')->references('id')->on('districts');

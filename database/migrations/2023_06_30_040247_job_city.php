@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('job_id');
             $table->foreign('job_id')->references('id')->on('jobs');
             $table->unsignedBigInteger('province_id');
-            $table->foreign('province_id')->references('id')->on('provinces')->cascadeOnDelete();
+            $table->foreign('province_id')->references('id')->on('provinces');
         }); 
     }
 

@@ -30,6 +30,7 @@ return new class extends Migration
             $table->tinyInteger('show_recipients_of_cv')->nullable()->comment('hiển thị thông tin người nhân cv');
             $table->string('email_recipients_of_cv', 50)->nullable()->comment('email người nhận cv');
             $table->string('post_anonymously', 50)->nullable()->comment('đăng tin tuyển dụng ẩn danh');
+            $table->tinyInteger('status')->nullable()->comment('trạng thái user');
 
             $table->unsignedBigInteger('company_id');
             $table->foreign('company_id')->references('id')->on('companies');

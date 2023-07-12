@@ -24,7 +24,8 @@ return new class extends Migration
             $table->string('logo', 255)->nullable()->comment('logo công ty');
             $table->string('banner', 255)->nullable()->comment('banner của công ty');
             $table->string('video', 255)->nullable()->comment('link video youtube');
-
+            $table->tinyInteger('status')->nullable()->comment('trạng thái công ty');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -21,8 +21,9 @@ class CreateAdminsTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
             $table->string('picture')->nullable();
+            $table->tinyInteger('status')->nullable()->comment('trạng thái admin');
             $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();

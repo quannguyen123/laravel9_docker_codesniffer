@@ -17,7 +17,8 @@ return new class extends Migration
             $table->bigIncrements('id');
             $table->string('name', 255)->nullable()->comment('tên phúc lợi');
             $table->string('icon', 255)->nullable()->comment('icon phúc lợi');
-
+            $table->tinyInteger('status')->nullable()->comment('trạng thái');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
