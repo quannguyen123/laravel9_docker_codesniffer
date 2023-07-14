@@ -63,38 +63,12 @@ class OccupationService {
         return $this->repository->create($occupation);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function detail($occupation)
-    {
-
-    }
-
     public function changeStatus($occupation, $status) {
         $occupation['status'] = config('custom.status.' . $status);
         $occupation->save();
 
         return [];
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(int $id)
-    {
-        $data['admin'] = $this->repository->find($id);
-        $data['id'] = $id;
-
-        return $data;
-    }
-
 
     public function update(Request $request, $occupation)
     {

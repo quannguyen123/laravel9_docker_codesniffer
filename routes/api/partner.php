@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::post('partner/register', [AuthController::class, 'register']);
-Route::post('partner/login', [AuthController::class, 'login'])->name('login');
+Route::post('partner/login', [AuthController::class, 'login']);
 
 Route::group( ['prefix' => 'partner', 'middleware' => ['auth:api-user', 'role:partner'] ],function(){
     Route::post('test', function() {
@@ -26,11 +26,11 @@ Route::group( ['prefix' => 'partner', 'middleware' => ['auth:api-user', 'role:pa
     Route::post('logout', [AuthController::class, 'logout']);
 
     Route::prefix('partner-management')->group(function() {
-        Route::get('index', [PartnerManagementController::class, 'index'])->name('admin.user.index');
-        Route::get('detail/{id}', [PartnerManagementController::class, 'detail'])->name('admin.user.index');
-        Route::post('store', [PartnerManagementController::class, 'store'])->name('admin.user.store');
-        Route::put('update/{id}', [PartnerManagementController::class, 'update'])->name('admin.user.update');
-        Route::delete('destroy/{id}', [PartnerManagementController::class, 'destroy'])->name('admin.user.destroy');
+        Route::get('index', [PartnerManagementController::class, 'index']);
+        Route::get('detail/{id}', [PartnerManagementController::class, 'detail']);
+        Route::post('store', [PartnerManagementController::class, 'store']);
+        Route::put('update/{id}', [PartnerManagementController::class, 'update']);
+        Route::delete('destroy/{id}', [PartnerManagementController::class, 'destroy']);
     });
 
 });

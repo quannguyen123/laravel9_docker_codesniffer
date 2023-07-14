@@ -66,38 +66,12 @@ class WelfareService {
         return $this->repository->create($welfare);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function detail($welfare)
-    {
-
-    }
-
     public function changeStatus($welfare, $status) {
         $welfare['status'] = config('custom.status.' . $status);
         $welfare->save();
 
         return [];
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(int $id)
-    {
-        $data['admin'] = $this->repository->find($id);
-        $data['id'] = $id;
-
-        return $data;
-    }
-
 
     public function update(Request $request, $welfare)
     {
