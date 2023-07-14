@@ -14,7 +14,7 @@ return new class extends Migration
 
     public function up()
     {
-        Schema::create('tag_suggest', function (Blueprint $table) {
+        Schema::create('tag_suggests', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->unsignedBigInteger('tag_id');
             $table->foreign('tag_id')->references('id')->on('tags');
@@ -23,7 +23,7 @@ return new class extends Migration
             $table->foreign('occupation_id')->references('id')->on('occupations');
 
             $table->unsignedBigInteger('job_title_id');
-            $table->foreign('job_title_id')->references('id')->on('job_title');
+            $table->foreign('job_title_id')->references('id')->on('job_titles');
         });
     }
 
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tag_suggest');
+        Schema::dropIfExists('tag_suggests');
     }
 };

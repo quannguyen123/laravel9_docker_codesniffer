@@ -47,14 +47,14 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:api-admin', 'role:admi
         Route::get('/change-status/{welfare}/{status}',  [WelfareController::class, 'changeStatus'])->whereIn('status', ['lock', 'active']);
     });
     
-    // Route::prefix('tag')->group(function() {
-    //     Route::get('index', [TagController::class, 'index']);
-    //     Route::post('store', [TagController::class, 'store']);
-    //     Route::get('detail/{tag}', [TagController::class, 'detail']);
-    //     Route::post('update/{tag}', [TagController::class, 'update']);
-    //     Route::delete('destroy/{tag}', [TagController::class, 'destroy']);
-    //     Route::get('/change-status/{tag}/{status}',  [TagController::class, 'changeStatus'])->whereIn('status', ['lock', 'active']);
-    // });
+    Route::prefix('tag')->group(function() {
+        Route::get('index', [TagController::class, 'index']);
+        Route::post('store', [TagController::class, 'store']);
+        Route::get('detail/{tag}', [TagController::class, 'detail']);
+        Route::post('update/{tag}', [TagController::class, 'update']);
+        Route::delete('destroy/{tag}', [TagController::class, 'destroy']);
+        Route::get('/change-status/{tag}/{status}',  [TagController::class, 'changeStatus'])->whereIn('status', ['lock', 'active']);
+    });
 
     Route::prefix('job-title')->group(function() {
         Route::get('index', [TitleJobController::class, 'index']);
