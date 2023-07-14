@@ -49,6 +49,7 @@ class WelfareService {
     {
         $requestData = $request->only(['name']);
 
+        $image_name = '';
         if (!empty($request->file('icon'))) {
             $icon = $request->file('icon');
             $image_name = time().'.'.$icon->getClientOriginalExtension();

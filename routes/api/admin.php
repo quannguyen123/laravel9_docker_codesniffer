@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admins\ManagerAccountController;
 use App\Http\Controllers\Api\Admin\AuthController;
 use App\Http\Controllers\Api\Admin\OccupationController;
+use App\Http\Controllers\Api\Admin\ServiceController;
 use App\Http\Controllers\Api\Admin\TagController;
 use App\Http\Controllers\Api\Admin\TitleJobController;
 use App\Http\Controllers\Api\Admin\WelfareController;
@@ -63,6 +64,15 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:api-admin', 'role:admi
         Route::post('update/{job_title}', [TitleJobController::class, 'update']);
         Route::delete('destroy/{job_title}', [TitleJobController::class, 'destroy']);
         Route::get('/change-status/{job_title}/{status}',  [TitleJobController::class, 'changeStatus'])->whereIn('status', ['lock', 'active']);
+    });
+
+    Route::prefix('service')->group(function() {
+        Route::get('index', [ServiceController::class, 'index']);
+        Route::post('store', [ServiceController::class, 'store']);
+        Route::get('detail/{service}', [ServiceController::class, 'detail']);
+        Route::post('update/{service}', [ServiceController::class, 'update']);
+        Route::delete('destroy/{service}', [ServiceController::class, 'destroy']);
+        Route::get('/change-status/{service}/{status}',  [ServiceController::class, 'changeStatus'])->whereIn('status', ['lock', 'active']);
     });
 });
 

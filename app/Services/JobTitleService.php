@@ -58,9 +58,9 @@ class JobTitleService {
         return $this->repository->create($jobTitle);
     }
 
-    public function changeStatus($welfare, $status) {
-        $welfare['status'] = config('custom.status.' . $status);
-        $welfare->save();
+    public function changeStatus($jobTitle, $status) {
+        $jobTitle['status'] = config('custom.status.' . $status);
+        $jobTitle->save();
 
         return [];
     }
@@ -85,7 +85,7 @@ class JobTitleService {
      */
     public function destroy($jobTitle)
     {
-        $welfare['deleted_by'] = Auth::guard('api-admin')->user()->id;
+        $jobTitle['deleted_by'] = Auth::guard('api-admin')->user()->id;
         $jobTitle['deleted_at'] = date("Y-m-d H:i:s", time());
         $jobTitle->save();
 

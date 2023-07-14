@@ -2,10 +2,41 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Prettus\Repository\Contracts\Transformable;
+use Prettus\Repository\Traits\TransformableTrait;
 
-class Service extends Model
+/**
+ * Class Service.
+ *
+ * @package namespace App\Models;
+ */
+class Service extends Model implements Transformable
 {
-    use HasFactory;
+    use TransformableTrait;
+    use SoftDeletes;
+    
+    protected $primaryKey = 'id';
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'type',
+        'price',
+        'used_time',
+        'description',
+        'content',
+        'image',
+        'note',
+        'status',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+    ];
+
 }
