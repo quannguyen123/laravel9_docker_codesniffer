@@ -27,10 +27,10 @@ return new class extends Migration
             $table->tinyInteger('nation')->nullable()->comment('quốc gia');
             $table->tinyInteger('marital_status')->nullable()->comment('tình trạng hôn nhân');
             
-            $table->unsignedBigInteger('province_id');
+            $table->unsignedBigInteger('province_id')->nullable();
             $table->foreign('province_id')->references('id')->on('provinces');
             
-            $table->unsignedBigInteger('district_id');
+            $table->unsignedBigInteger('district_id')->nullable();
             $table->foreign('district_id')->references('id')->on('districts');
 
             $table->string('address', 255)->nullable()->comment('địa chỉ');
