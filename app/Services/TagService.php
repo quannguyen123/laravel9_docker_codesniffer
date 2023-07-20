@@ -113,9 +113,6 @@ class TagService {
         $occupationIds = (array)$requestData['occupation_ids'];
         $jobTitleIds = (array)$requestData['job_title_ids'];
 
-        // remove all TagSuggest
-        TagSuggest::where('tag_id', $tag->id)->delete();
-
         $tagSuggest = [];
         if (!empty($occupationIds) && !empty($jobTitleIds)) {
             foreach ($occupationIds as $occupationId) {
@@ -141,6 +138,11 @@ class TagService {
                     'job_title_id' => $jobTitleId,
                 ];
             }
+        }
+
+        if (!empty($tagSuggest)) {
+            // remove all TagSuggest
+            TagSuggest::where('tag_id', $tag->id)->delete();
         }
 
         TagSuggest::insert($tagSuggest);

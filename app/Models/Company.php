@@ -38,5 +38,13 @@ class Company extends Model implements Transformable
         'updated_by',
         'deleted_by',
     ];
+
+    public function occupations() {
+        return $this->belongsToMany('App\Models\Occupation', 'company_occupation', 'company_id', 'occupation_id');
+    }
+
+    public function welfares() {
+        return $this->belongsToMany('App\Models\Welfare', 'company_welfare', 'company_id', 'welfare_id')->withPivot('content');
+    }
 }
 

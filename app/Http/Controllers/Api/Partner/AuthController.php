@@ -84,7 +84,8 @@ class AuthController extends BaseController
                 'name' => $requestData['first_name'],
                 'company_address' => $requestData['company_address'],
                 'purpose' => $requestData['purpose'],
-                'sum_budget_recruitment' => $requestData['sum_budget_recruitment']
+                'sum_budget_recruitment' => $requestData['sum_budget_recruitment'],
+                'created_by' => $user->id,
             ];
             $company = Company::create($dataCompany);
 

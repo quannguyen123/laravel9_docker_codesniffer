@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('company_welfare', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->unsignedBigInteger('job_id');
-            $table->foreign('job_id')->references('id')->on('jobs');
+            $table->unsignedBigInteger('company_id');
+            $table->foreign('company_id')->references('id')->on('companies');
             $table->unsignedBigInteger('welfare_id');
             $table->foreign('welfare_id')->references('id')->on('welfares');
             $table->text('content')->comment('nội dung phúc lợi');

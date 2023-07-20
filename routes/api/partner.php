@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Partner\AuthController;
+use App\Http\Controllers\Api\Partner\CompanyController;
 use App\Http\Controllers\Api\Partner\PartnerManagementController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,12 @@ Route::group( ['prefix' => 'partner', 'middleware' => ['auth:api-user', 'role:pa
         Route::post('store', [PartnerManagementController::class, 'store']);
         Route::put('update/{id}', [PartnerManagementController::class, 'update']);
         Route::delete('destroy/{id}', [PartnerManagementController::class, 'destroy']);
+    });
+
+    Route::prefix('company')->group(function() {
+        Route::get('detail', [CompanyController::class, 'detail']);
+        // Route::post('store', [CompanyController::class, 'store']);
+        Route::post('update', [CompanyController::class, 'update']);
     });
 
 });
