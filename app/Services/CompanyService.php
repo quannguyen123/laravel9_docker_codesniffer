@@ -65,7 +65,6 @@ class CompanyService {
             $companyData['banner'] = $image_name;
         }
 
-        // return $company['id'];
         $data = $this->repository->update($companyData, $company['id']);
 
         // save occupation

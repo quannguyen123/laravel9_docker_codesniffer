@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Partner\AuthController;
 use App\Http\Controllers\Api\Partner\CompanyController;
+use App\Http\Controllers\Api\Partner\JobLocationController;
 use App\Http\Controllers\Api\Partner\PartnerManagementController;
 use Illuminate\Support\Facades\Route;
 
@@ -40,4 +41,11 @@ Route::group( ['prefix' => 'partner', 'middleware' => ['auth:api-user', 'role:pa
         Route::post('update', [CompanyController::class, 'update']);
     });
 
+    Route::prefix('job-location')->group(function() {
+        Route::get('index', [JobLocationController::class, 'index']);
+        Route::post('store', [JobLocationController::class, 'store']);
+        Route::get('detail/{id}', [JobLocationController::class, 'detail']);
+        Route::post('update/{id}', [JobLocationController::class, 'update']);
+        Route::delete('destroy/{id}', [JobLocationController::class, 'destroy']);
+    });
 });
