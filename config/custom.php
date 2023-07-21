@@ -13,6 +13,11 @@
         'status' => [
             'active' => 1,
             'lock' => 2
+        ],
+
+        'status-payment' => [
+            'paid' => 1,
+            'unpaid' => 2,
         ]
     ];
 ?>

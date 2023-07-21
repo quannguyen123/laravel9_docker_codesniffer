@@ -58,7 +58,7 @@ class ServiceService {
             return [false,  'Không tồn tại dịch vụ'];
         }
 
-        Cart::add($service['id'], $service['name'], $requestData['quantity'], $service['price'], 0, ['image' => $service['image']]);
+        Cart::add($service['id'], $service['name'], $requestData['quantity'], $service['price'], 0, ['image' => $service['image'], 'used_time' => $service['used_time']]);
         $cart = Cart::content();
         return $cart;
     }

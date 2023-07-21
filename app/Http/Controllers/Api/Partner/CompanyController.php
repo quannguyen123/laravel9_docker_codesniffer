@@ -27,7 +27,6 @@ class CompanyController extends BaseController
     {
         try {            
             $companyId = Auth::guard('api-user')->user()->company[0]['id'];
-            // $res['company'] = $company;
             $data = $this->companyService->detail($companyId);
             return $this->sendResponse($data, 'Success.');
         } catch (\Exception $e) {
@@ -46,7 +45,6 @@ class CompanyController extends BaseController
     {
         $company = Auth::guard('api-user')->user()->company[0];
 
-        // return $request->all();
         try {
             $validator = Validator::make($request->all(), [
                 'name' => 'required|unique:companies,name,' . $company['id'],
