@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Repositories\ServiceRepository;
+use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -37,6 +38,64 @@ class ServiceService {
         }
 
         return $this->repository->search($filters);
+    }
+
+    public function list() {
+        $data = $this->repository->where('status', config('custom.status.active'))->get();
+
+        return $data;
+    }
+
+    public function addToCart($request) {
+        $requestData = $request->only([
+            'service_id',
+            'quantity',
+        ]);
+
+        $service = $this->repository->find($requestData['service_id']);
+
+        if (empty($service)) {
+            return [false,  'Không tồn tại dịch vụ'];
+        }
+
+        Cart::add($service['id'], $service['name'], $requestData['quantity'], $service['price'], 0, ['image' => $service['image']]);
+        $cart = Cart::content();
+        return $cart;
+    }
+
+    public function editCartItem($request) {
+        $requestData = $request->only([
+            'row_id',
+            'quantity',
+        ]);
+
+        Cart::update($requestData['row_id'], $requestData['quantity']);
+        $cart = Cart::content();
+
+        return $cart;
+    }
+
+    public function cartInfo() {
+        $cart = Cart::content();
+
+        return $cart;
+    }
+
+    public function deleteCartItem(Request $request) {
+        $requestData = $request->only([
+            'row_id',
+        ]);
+
+        Cart::remove($requestData['row_id']);
+        $cart = Cart::content();
+
+        return $cart;
+    }
+
+    public function deleteCart() {
+        Cart::destroy();
+
+        return [];
     }
 
     /**

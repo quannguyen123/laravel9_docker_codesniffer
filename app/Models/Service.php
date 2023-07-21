@@ -25,6 +25,7 @@ class Service extends Model implements Transformable
      * @var array
      */
     protected $fillable = [
+        'id',
         'name',
         'type',
         'price',

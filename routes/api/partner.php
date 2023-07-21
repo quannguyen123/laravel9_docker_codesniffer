@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Partner\AuthController;
 use App\Http\Controllers\Api\Partner\CompanyController;
 use App\Http\Controllers\Api\Partner\JobLocationController;
 use App\Http\Controllers\Api\Partner\PartnerManagementController;
+use App\Http\Controllers\Api\Partner\ServiceController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -47,5 +48,17 @@ Route::group( ['prefix' => 'partner', 'middleware' => ['auth:api-user', 'role:pa
         Route::get('detail/{id}', [JobLocationController::class, 'detail']);
         Route::post('update/{id}', [JobLocationController::class, 'update']);
         Route::delete('destroy/{id}', [JobLocationController::class, 'destroy']);
+    });
+
+    Route::prefix('service')->group(function() {
+        Route::get('list', [ServiceController::class, 'list']);
+        Route::get('detail/{service}', [ServiceController::class, 'detail']);
+
+        Route::post('add-to-cart', [ServiceController::class, 'addToCart']);
+        Route::post('edit-cart-item', [ServiceController::class, 'editCartItem']);
+        Route::get('cart-info', [ServiceController::class, 'cartInfo']);
+        Route::post('delete-cart-item', [ServiceController::class, 'deleteCartItem']);
+
+        Route::get('delete-cart', [ServiceController::class, 'deleteCart']);
     });
 });
