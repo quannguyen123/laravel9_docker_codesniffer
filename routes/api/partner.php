@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Partner\CompanyController;
 use App\Http\Controllers\Api\Partner\JobLocationController;
 use App\Http\Controllers\Api\Partner\OrderController;
 use App\Http\Controllers\Api\Partner\PartnerManagementController;
+use App\Http\Controllers\Api\Partner\PaymentController;
 use App\Http\Controllers\Api\Partner\ServiceController;
 use Illuminate\Support\Facades\Route;
 
@@ -67,5 +68,11 @@ Route::group( ['prefix' => 'partner', 'middleware' => ['auth:api-user', 'role:pa
         Route::get('index', [OrderController::class, 'index']);
         Route::get('store', [OrderController::class, 'store']);
         Route::get('{id}/order-info', [OrderController::class, 'orderInfo']);
+    });
+
+    Route::prefix('payment')->group(function() {
+        Route::get('/{order}/vnpay', [PaymentController::class, 'pay']);
+        Route::get('payment-return', [PaymentController::class, 'paymentReturn'])->name('payment-return');
+        Route::get('callback', [PaymentController::class, 'callback'])->name('payment-callback');
     });
 });

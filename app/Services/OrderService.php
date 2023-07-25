@@ -39,7 +39,7 @@ class OrderService {
         }
         
         $order = [
-            'total' => Cart::total(),
+            'total' => Cart::total(0, 0, ''),
             'user_id' => Auth::guard('api-user')->user()->id,
             'company_id' => Auth::guard('api-user')->user()->company[0]['id'],
             'payment_status' => config('custom.status-payment.unpaid'),

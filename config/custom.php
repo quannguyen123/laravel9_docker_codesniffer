@@ -18,6 +18,7 @@
         'status-payment' => [
             'paid' => 1,
             'unpaid' => 2,
+            'pay_failed' => 3,
         ]
     ];
 ?>
