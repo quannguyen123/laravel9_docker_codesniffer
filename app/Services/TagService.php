@@ -40,6 +40,33 @@ class TagService {
         return $this->repository->search($filters);
     }
 
+    public function publicSearchTag($request)
+    {
+        $filters = [];
+        if (!empty($request->orderBy) && !empty($request->orderType)) {
+            $filters = [
+                'orderBy' => $request->orderBy,
+                'orderType' => $request->orderType,
+            ];
+        }
+
+        if (!empty($request->search)) {
+            $filters['search'] = $request->search;
+        }
+
+        return $this->repository->publicSearchTag($filters);
+    }
+
+    public function getTagSuggest($request) {
+        $requestData = $request->only(['occupation_id', 'job_title_id']);
+
+        $tagId = TagSuggest::where('occupation_id', $requestData['occupation_id'])->where('job_title_id', $requestData['job_title_id'])->fluck('tag_id');
+
+        $tags = $this->repository->select('name', 'count_job', 'status')->findWhereIn('id', $tagId);
+
+        return $tags;
+    }
+
     /**
      * Store a newly created resource in storage.
      *

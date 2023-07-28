@@ -13,4 +13,5 @@ use Prettus\Repository\Contracts\RepositoryInterface;
 interface TagRepository extends RepositoryInterface
 {
     public function search(array $filter): LengthAwarePaginator;
+    public function publicSearchTag(array $filter): LengthAwarePaginator;
 }

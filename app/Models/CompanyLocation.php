@@ -3,20 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Prettus\Repository\Contracts\Transformable;
 use Prettus\Repository\Traits\TransformableTrait;
 
 /**
- * Class TagRepository.
+ * Class CompanyLocation.
  *
  * @package namespace App\Models;
  */
-class Tag extends Model implements Transformable
+class CompanyLocation extends Model implements Transformable
 {
     use TransformableTrait;
-    use SoftDeletes;
-    
+    protected $table = 'company_location';
     protected $primaryKey = 'id';
 
     /**
@@ -25,13 +23,11 @@ class Tag extends Model implements Transformable
      * @var array
      */
     protected $fillable = [
-        'id',
         'name',
-        'count_job',
+        'address',
         'status',
-        'created_by',
-        'updated_by',
-        'deleted_by',
+        'company_id',
+        'province_id',
     ];
 
 }

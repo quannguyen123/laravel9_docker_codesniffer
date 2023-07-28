@@ -13,6 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
+        Schema::table('jobs', function (Blueprint $table) {
+            $table->date('expiration_date')->nullable()->after('company_id')->comment('ngày hết hạn');
+        });
     }
 
     /**
@@ -22,5 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
+        Schema::table('jobs', function (Blueprint $table) {
+            $table->dropColumn('expiration_date');
+        });
     }
 };

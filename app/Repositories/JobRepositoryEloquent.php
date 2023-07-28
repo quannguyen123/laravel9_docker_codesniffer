@@ -4,18 +4,21 @@ namespace App\Repositories;
 
 use Prettus\Repository\Eloquent\BaseRepository;
 use Prettus\Repository\Criteria\RequestCriteria;
-use App\Repositories\OccupationRepository;
-use App\Models\Occupation;
+use App\Repositories\JobRepository;
+use App\Models\Job;
+use App\Validators\JobValidator;
+use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 
 /**
- * Class OccupationRepositoryEloquent.
+ * Class JobRepositoryEloquent.
  *
  * @package namespace App\Repositories;
  */
-class OccupationRepositoryEloquent extends BaseRepository implements OccupationRepository
+class JobRepositoryEloquent extends BaseRepository implements JobRepository
 {
     /**
      * Specify Model class name
@@ -24,7 +27,7 @@ class OccupationRepositoryEloquent extends BaseRepository implements OccupationR
      */
     public function model()
     {
-        return Occupation::class;
+        return Job::class;
     }
 
     
@@ -64,10 +67,11 @@ class OccupationRepositoryEloquent extends BaseRepository implements OccupationR
         return $query->paginate($limit);
     }
 
-    public function publicSearchOccupation(array $filter): LengthAwarePaginator
+    public function getJobByStatus(array $filter): LengthAwarePaginator
     {
         $orderBy = Arr::get($filter, 'orderBy', '');
         $orderType = Arr::get($filter, 'orderType', '');
+        
         
         /** @var Builder $this */
         if (in_array($orderType, ['asc', 'desc']) && in_array($orderBy, ['name', 'email', 'created_at'])) {
@@ -81,15 +85,57 @@ class OccupationRepositoryEloquent extends BaseRepository implements OccupationR
                 $query->where('name', 'LIKE', '%'.$filter['search'].'%');
             });
         }
+
+        $query = $query->where('company_id', Auth::guard('api-user')->user()->company[0]['id']);
         
-        $query->where('status', config('custom.status.active'));
-        $query->select('id', 'name', 'slug');
+        if (!empty($filter['status'])) {
+            $status = Arr::get($filter, 'status', '');
+
+            switch($status) {
+                case 'public':
+                    $query = $query->where('status', config('custom.job-status.public'))
+                                ->where('expiration_date', '>=', Carbon::today());
+                    break;
+    
+                // Việc bị ẩn do thay đổi trạng thái
+                case 'hidden':
+                    $query = $query->where('status', config('custom.job-status.hidden'))
+                            ->where('expiration_date', '>=', Carbon::today());
+                    break;
+                    
+                // Sắp hết hạn trong 7 ngày
+                case 'about_to_expire':
+                    $query = $query->where('status', config('custom.job-status.public'))
+                                ->whereBetween('expiration_date', [Carbon::today(), Carbon::today()->addDays(7)]);
+                    break;
+    
+                // Việc làm hết hạn
+                case 'expired':
+                    $query = $query->where(function ($query) {
+                        $query->where('status', config('custom.job-status.expired'))
+                            ->orWhere('expiration_date', '<', Carbon::today());
+                    });
+                    break;
+    
+                // Việc làm nháp
+                case 'draft':
+                    $query = $query->where('status', config('custom.job-status.draft'));
+                    break;
+    
+                // Việc làm ảo
+                case 'virtual':
+                    $query = $query->where('status', config('custom.job-status.virtual'));
+                    break;
+            }
+        }
+        
         $limit = config('custom.paginate');
 
         if (!empty(Cookie::get('limit')) && in_array(Cookie::get('limit'), (array)config('custom.page-limit'))) {
             $limit = Cookie::get('limit');
         }
 
+        // return $query->toSql();
         return $query->paginate($limit);
     }
 }

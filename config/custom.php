@@ -19,6 +19,20 @@
             'paid' => 1,
             'unpaid' => 2,
             'pay_failed' => 3,
+        ],
+
+        'job-status' => [
+            'draft' => 1,
+            'public' => 2,
+            'hidden' => 3,
+            'about_to_expire' => 4,
+            'expired' => 5,
+            'virtual' => 7
+        ],
+
+        'service-type' => [
+            'post-job' => 1,
+            'find-cv' => 2,
         ]
     ];
 ?>

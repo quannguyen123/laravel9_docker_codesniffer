@@ -2,10 +2,14 @@
 
 namespace App\Providers;
 
+use App\Repositories\CompanyLocationRepository;
+use App\Repositories\CompanyLocationRepositoryEloquent;
 use App\Repositories\CompanyRepository;
 use App\Repositories\CompanyRepositoryEloquent;
 use App\Repositories\JobLocationRepository;
 use App\Repositories\JobLocationRepositoryEloquent;
+use App\Repositories\JobRepository;
+use App\Repositories\JobRepositoryEloquent;
 use App\Repositories\JobTitleRepository;
 use App\Repositories\JobTitleRepositoryEloquent;
 use App\Repositories\OccupationRepository;
@@ -50,5 +54,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(JobLocationRepository::class, JobLocationRepositoryEloquent::class);
         $this->app->bind(OrderRepository::class, OrderRepositoryEloquent::class);
         $this->app->bind(OrderDetailRepository::class, OrderDetailRepositoryEloquent::class);
+        $this->app->bind(JobRepository::class, JobRepositoryEloquent::class);
+        $this->app->bind(CompanyLocationRepository::class, CompanyLocationRepositoryEloquent::class);
     }
 }

@@ -55,6 +55,36 @@ class TagRepositoryEloquent extends BaseRepository implements TagRepository
             });
         }
 
+        $query->select('id', 'name');
+        $limit = config('custom.paginate');
+
+        if (!empty(Cookie::get('limit')) && in_array(Cookie::get('limit'), (array)config('custom.page-limit'))) {
+            $limit = Cookie::get('limit');
+        }
+
+        return $query->paginate($limit);
+    }
+
+    public function publicSearchTag(array $filter): LengthAwarePaginator
+    {
+        $orderBy = Arr::get($filter, 'orderBy', '');
+        $orderType = Arr::get($filter, 'orderType', '');
+        
+        /** @var Builder $this */
+        if (in_array($orderType, ['asc', 'desc']) && in_array($orderBy, ['name', 'email', 'created_at'])) {
+            $query = $this->orderBy((string)$orderBy, (string)$orderType);
+        } else {
+            $query = $this->orderBy('id', 'asc');
+        }
+
+        if (!empty($filter['search'])) {
+            $query = $query->where(function ($query) use ($filter) {
+                $query->where('name', 'LIKE', '%'.$filter['search'].'%');
+            });
+        }
+
+        $query->where('status', config('custom.status.active'));
+        $query->select('id', 'name');
         $limit = config('custom.paginate');
 
         if (!empty(Cookie::get('limit')) && in_array(Cookie::get('limit'), (array)config('custom.page-limit'))) {

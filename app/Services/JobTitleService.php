@@ -39,6 +39,23 @@ class JobTitleService {
         return $this->repository->search($filters);
     }
 
+    public function publicSearchJobTitle($request)
+    {
+        $filters = [];
+        if (!empty($request->orderBy) && !empty($request->orderType)) {
+            $filters = [
+                'orderBy' => $request->orderBy,
+                'orderType' => $request->orderType,
+            ];
+        }
+
+        if (!empty($request->search)) {
+            $filters['search'] = $request->search;
+        }
+
+        return $this->repository->publicSearchJobTitle($filters);
+    }
+
     /**
      * Store a newly created resource in storage.
      *

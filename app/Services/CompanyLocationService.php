@@ -2,20 +2,19 @@
 
 namespace App\Services;
 
-use App\Models\JobLocation;
-use App\Repositories\JobLocationRepository;
-use App\Repositories\JobTitleRepository;
+use App\Models\CompanyLocation;
+use App\Repositories\CompanyLocationRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class JobLocationService {
+class CompanyLocationService {
     /**
      * function contructer
      *
-     * @param JobLocationRepository $repository
+     * @param CompanyLocationRepository $repository
      */
     public function __construct(
-        protected readonly JobLocationRepository $repository
+        protected readonly CompanyLocationRepository $repository
     ) {
     }
 
@@ -26,9 +25,9 @@ class JobLocationService {
      */
     public function index($request)
     {
-        $jobLocation = JobLocation::where('company_id', Auth::guard('api-user')->user()->company[0]['id'])->get();
+        $companyLocaltion = CompanyLocation::where('company_id', Auth::guard('api-user')->user()->company[0]['id'])->get();
 
-        return $jobLocation;
+        return $companyLocaltion;
     }
 
     /**
@@ -45,7 +44,7 @@ class JobLocationService {
             'province_id',
         ]);
         
-        $jobLocation = [
+        $companyLocaltion = [
             'name' => $requestData['name'],
             'address' => $requestData['address'],
             'status' => config('custom.status.active'),
@@ -53,15 +52,15 @@ class JobLocationService {
             'province_id' => $requestData['province_id'],
         ];
 
-        return $this->repository->create($jobLocation);
+        return $this->repository->create($companyLocaltion);
     }
 
     public function detail($id) {
-        $jobLocation = JobLocation::where('id', $id)
+        $companyLocaltion = CompanyLocation::where('id', $id)
                                     ->where('company_id', Auth::guard('api-user')->user()->company[0]['id'])
                                     ->first();
 
-        return $jobLocation;
+        return $companyLocaltion;
     }
 
     public function update(Request $request, $id)
@@ -72,21 +71,21 @@ class JobLocationService {
             'province_id',
         ]);
 
-        $jobLocation = JobLocation::where('id', $id)
+        $companyLocaltion = CompanyLocation::where('id', $id)
                                     ->where('company_id', Auth::guard('api-user')->user()->company[0]['id'])
                                     ->first();
 
-        if (empty($jobLocation)) {
+        if (empty($companyLocaltion)) {
             return [];
         }
 
-        $jobLocation['name'] = $requestData['name'];
-        $jobLocation['address'] = $requestData['address'];
-        $jobLocation['province_id'] = $requestData['province_id'];
+        $companyLocaltion['name'] = $requestData['name'];
+        $companyLocaltion['address'] = $requestData['address'];
+        $companyLocaltion['province_id'] = $requestData['province_id'];
 
-        $jobLocation->save();
+        $companyLocaltion->save();
 
-        return $jobLocation;
+        return $companyLocaltion;
     }
 
     /**
@@ -97,7 +96,7 @@ class JobLocationService {
      */
     public function destroy($id)
     {
-        $isDelete = JobLocation::where('id', $id)
+        $isDelete = CompanyLocation::where('id', $id)
                                     ->where('company_id', Auth::guard('api-user')->user()->company[0]['id'])
                                     ->delete();
         

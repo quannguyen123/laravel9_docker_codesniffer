@@ -6,12 +6,12 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Prettus\Repository\Contracts\RepositoryInterface;
 
 /**
- * Interface JobTitleRepository.
+ * Interface JobRepository.
  *
  * @package namespace App\Repositories;
  */
-interface JobTitleRepository extends RepositoryInterface
+interface JobRepository extends RepositoryInterface
 {
     public function search(array $filter): LengthAwarePaginator;
-    public function publicSearchJobTitle(array $filter): LengthAwarePaginator;
+    public function getJobByStatus(array $filter): LengthAwarePaginator;
 }

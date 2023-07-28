@@ -22,11 +22,8 @@ class JobLocation extends Model implements Transformable
      * @var array
      */
     protected $fillable = [
-        'name',
-        'address',
-        'status',
-        'company_id',
-        'province_id',
+        'company_location_id',
+        'job_id',
     ];
 
 }

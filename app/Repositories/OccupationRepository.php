@@ -20,4 +20,5 @@ interface OccupationRepository extends RepositoryInterface
      * @return LengthAwarePaginator
      */
     public function search(array $filter): LengthAwarePaginator;
+    public function publicSearchOccupation(array $filter): LengthAwarePaginator;
 }

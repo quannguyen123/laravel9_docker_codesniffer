@@ -2,7 +2,10 @@
 
 use App\Http\Controllers\Api\Partner\AuthController;
 use App\Http\Controllers\Api\Partner\CompanyController;
-use App\Http\Controllers\Api\Partner\JobLocationController;
+use App\Http\Controllers\Api\Partner\CompanyLocationController;
+use App\Http\Controllers\Api\Partner\JobController;
+use App\Http\Controllers\Api\Partner\JobTitleController;
+use App\Http\Controllers\Api\Partner\OccupationController;
 use App\Http\Controllers\Api\Partner\OrderController;
 use App\Http\Controllers\Api\Partner\PartnerManagementController;
 use App\Http\Controllers\Api\Partner\PaymentController;
@@ -44,12 +47,12 @@ Route::group( ['prefix' => 'partner', 'middleware' => ['auth:api-user', 'role:pa
         Route::post('update', [CompanyController::class, 'update']);
     });
 
-    Route::prefix('job-location')->group(function() {
-        Route::get('index', [JobLocationController::class, 'index']);
-        Route::post('store', [JobLocationController::class, 'store']);
-        Route::get('detail/{id}', [JobLocationController::class, 'detail']);
-        Route::post('update/{id}', [JobLocationController::class, 'update']);
-        Route::delete('destroy/{id}', [JobLocationController::class, 'destroy']);
+    Route::prefix('company-location')->group(function() {
+        Route::get('index', [CompanyLocationController::class, 'index']);
+        Route::post('store', [CompanyLocationController::class, 'store']);
+        Route::get('detail/{id}', [CompanyLocationController::class, 'detail']);
+        Route::post('update/{id}', [CompanyLocationController::class, 'update']);
+        Route::delete('destroy/{id}', [CompanyLocationController::class, 'destroy']);
     });
 
     Route::prefix('service')->group(function() {
@@ -74,5 +77,15 @@ Route::group( ['prefix' => 'partner', 'middleware' => ['auth:api-user', 'role:pa
         Route::get('/{order}/vnpay', [PaymentController::class, 'pay']);
         Route::get('payment-return', [PaymentController::class, 'paymentReturn'])->name('payment-return');
         Route::get('callback', [PaymentController::class, 'callback'])->name('payment-callback');
+    });
+
+    Route::prefix('job')->group(function() {
+        Route::get('index', [JobController::class, 'index']);
+        Route::post('store', [JobController::class, 'store']);
+        Route::get('detail/{id}', [JobController::class, 'detail']);
+        Route::post('update/{id}', [JobController::class, 'update']);
+        Route::get('destroy/{id}', [JobController::class, 'destroy']);
+        Route::get('change-status/{id}',  [JobController::class, 'changeStatus']);
+
     });
 });

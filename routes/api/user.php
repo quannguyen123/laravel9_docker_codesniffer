@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\Partner\TagController;
+use App\Http\Controllers\Api\Public\JobTitleController;
+use App\Http\Controllers\Api\Public\OccupationController;
 use App\Http\Controllers\Api\User\AuthController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,5 +27,22 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth:api-user', 'role:user']
 
     Route::post('logout', [AuthController::class, 'logout']);
 });
+
+Route::prefix('public')->group(function() {
+    Route::prefix('occupation')->group(function() {
+        Route::get('index', [OccupationController::class, 'index']);
+    });
+    
+    Route::prefix('job-title')->group(function() {
+        Route::get('index', [JobTitleController::class, 'index']);
+    });
+
+    Route::prefix('tag')->group(function() {
+        Route::get('index', [TagController::class, 'index']);
+        Route::post('suggest', [TagController::class, 'suggest']);
+    });
+});
+
+
 
 

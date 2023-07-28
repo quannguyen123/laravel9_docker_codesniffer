@@ -4,16 +4,16 @@ namespace App\Http\Controllers\Api\Partner;
 
 use App\Http\Controllers\BaseController;
 use App\Http\Controllers\Controller;
-use App\Services\JobLocationService;
+use App\Services\CompanyLocationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class JobLocationController extends BaseController
+class CompanyLocationController extends BaseController
 {
     public function __construct(
-        protected JobLocationService $jobLocationService
+        protected CompanyLocationService $companyLocationService
     ) {
-        $this->jobLocationService = $jobLocationService;
+        $this->companyLocationService = $companyLocationService;
     }
     
     /**
@@ -24,9 +24,9 @@ class JobLocationController extends BaseController
     public function index(Request $request)
     {
         try {
-            $jobLocationAll = $this->jobLocationService->index($request);
+            $companyLocationAll = $this->companyLocationService->index($request);
 
-            $res['jobLocationAll'] = $jobLocationAll;
+            $res['companyLocationAll'] = $companyLocationAll;
 
             return $this->sendResponse($res, 'Success.');
         } catch (\Exception $e) {
@@ -44,7 +44,7 @@ class JobLocationController extends BaseController
     {
         try {
             $validator = Validator::make($request->all(), [
-                'name' => 'required|unique:job_location,name',
+                'name' => 'required|unique:company_location,name',
                 'address' => 'required',
                 'province_id' => 'required|exists:provinces,id',
             ]);
@@ -53,9 +53,9 @@ class JobLocationController extends BaseController
                 return $this->sendError('Validation Error.', $validator->errors());
             }
     
-            $jobLocation = $this->jobLocationService->store($request);
+            $companyLocation = $this->companyLocationService->store($request);
     
-            return $this->sendResponse($jobLocation, 'Success.');
+            return $this->sendResponse($companyLocation, 'Success.');
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -70,7 +70,7 @@ class JobLocationController extends BaseController
     public function detail($id)
     {
         try {            
-            $res['jobLocation'] = $this->jobLocationService->detail($id);
+            $res['companyLocation'] = $this->companyLocationService->detail($id);
 
             return $this->sendResponse($res, 'Success.');
         } catch (\Exception $e) {
@@ -89,7 +89,7 @@ class JobLocationController extends BaseController
     {
         try {
             $validator = Validator::make($request->all(), [
-                'name' => 'required|unique:job_location,name,' . $id,
+                'name' => 'required|unique:company_location,name,' . $id,
                 'address' => 'required',
                 'province_id' => 'required|exists:provinces,id',
             ]);
@@ -98,7 +98,7 @@ class JobLocationController extends BaseController
                 return $this->sendError('Validation Error.', $validator->errors());
             }
             
-            $data = $this->jobLocationService->update($request, $id);
+            $data = $this->companyLocationService->update($request, $id);
 
             return $this->sendResponse($data, 'Success.');
         } catch (\Exception $e) {
@@ -115,7 +115,7 @@ class JobLocationController extends BaseController
     public function destroy($id)
     {
         try {
-            $status = $this->jobLocationService->destroy($id);
+            $status = $this->companyLocationService->destroy($id);
 
             if ($status) {
                 return $this->sendResponse($status, 'Success.');
