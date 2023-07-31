@@ -31,23 +31,13 @@ class JobService {
      */
     public function index($request, $status)
     {   
-        $filters = [];
-        if (!empty($request->orderBy) && !empty($request->orderType)) {
-            $filters = [
-                'orderBy' => $request->orderBy,
-                'orderType' => $request->orderType,
-            ];
-        }
+        $requestData = $request->only([
+            'status',
+            'export',
+            'filters'
+        ]);
 
-        if (!empty($request->search)) {
-            $filters['search'] = $request->search;
-        }
-
-        if (!empty($request->status)) {
-            $filters['status'] = $request->status;
-        }
-
-        return $this->repository->getJobByStatus($filters);
+        return $this->repository->getJobByStatus($requestData);
     }
 
     /**

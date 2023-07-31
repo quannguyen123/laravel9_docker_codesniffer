@@ -86,6 +86,6 @@ Route::group( ['prefix' => 'partner', 'middleware' => ['auth:api-user', 'role:pa
         Route::post('update/{id}', [JobController::class, 'update']);
         Route::get('destroy/{id}', [JobController::class, 'destroy']);
         Route::get('change-status/{id}',  [JobController::class, 'changeStatus']);
-
+        
     });
 });

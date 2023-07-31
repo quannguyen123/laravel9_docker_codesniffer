@@ -67,11 +67,10 @@ class JobRepositoryEloquent extends BaseRepository implements JobRepository
         return $query->paginate($limit);
     }
 
-    public function getJobByStatus(array $filter): LengthAwarePaginator
+    public function getJobByStatus($request): LengthAwarePaginator
     {
-        $orderBy = Arr::get($filter, 'orderBy', '');
-        $orderType = Arr::get($filter, 'orderType', '');
-        
+        $orderBy = Arr::get($request, 'orderBy', '');
+        $orderType = Arr::get($request, 'orderType', '');
         
         /** @var Builder $this */
         if (in_array($orderType, ['asc', 'desc']) && in_array($orderBy, ['name', 'email', 'created_at'])) {
@@ -80,10 +79,25 @@ class JobRepositoryEloquent extends BaseRepository implements JobRepository
             $query = $this->orderBy('id', 'asc');
         }
 
-        if (!empty($filter['search'])) {
-            $query = $query->where(function ($query) use ($filter) {
-                $query->where('name', 'LIKE', '%'.$filter['search'].'%');
+        if (!empty($request['search'])) {
+            $query = $query->where(function ($query) use ($request) {
+                $query->where('name', 'LIKE', '%'.$request['search'].'%');
             });
+        }
+
+        if (!empty($request['filters']['occupation'])) {
+            $query->leftJoin('job_occupation', 'job_occupation.job_id', '=', 'jobs.id');
+            $query->where('job_occupation.occupation_id', $request['filters']['occupation']);
+        }
+
+        if (!empty($request['filters']['location'])) {
+            $query->leftJoin('job_location', 'job_location.job_id', '=', 'jobs.id');
+            $query->leftJoin('company_location', 'company_location.id', '=', 'job_location.company_location_id');
+            $query->where('company_location.province_id', $request['filters']['location']);
+        }
+
+        if (!empty($request['filters']['created_by'])) {
+            $query->where('created_by', $request['filters']['created_by']);
         }
 
         $query = $query->where('company_id', Auth::guard('api-user')->user()->company[0]['id']);
@@ -135,7 +149,7 @@ class JobRepositoryEloquent extends BaseRepository implements JobRepository
             $limit = Cookie::get('limit');
         }
 
-        // return $query->toSql();
+        dd($query->toSql());
         return $query->paginate($limit);
     }
 }
