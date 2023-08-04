@@ -11,10 +11,10 @@ use Prettus\Repository\Traits\TransformableTrait;
  *
  * @package namespace App\Models;
  */
-class CompanyLocation extends Model implements Transformable
+class JobUserFavourite extends Model implements Transformable
 {
     use TransformableTrait;
-    protected $table = 'company_location';
+    protected $table = 'job_user_favourite';
     protected $primaryKey = 'id';
 
     /**
@@ -23,14 +23,8 @@ class CompanyLocation extends Model implements Transformable
      * @var array
      */
     protected $fillable = [
-        'name',
-        'address',
-        'status',
-        'company_id',
-        'province_id',
+        'user_id',
+        'job_id'
     ];
 
-    public function province() {
-        return $this->belongsTo('App\Models\Province', 'province_id', 'id')->select('id', 'name');
-    }
 }

@@ -6,11 +6,15 @@ use App\Models\Job;
 use App\Models\JobLocation;
 use App\Models\JobOccupation;
 use App\Models\JobTag;
+use App\Models\JobUserApply;
+use App\Models\JobUserFavourite;
+use App\Models\JobUserView;
 use App\Repositories\JobLocationRepository;
 use App\Repositories\JobRepository;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 
 class JobService {
@@ -321,5 +325,222 @@ class JobService {
         $job->save();
 
         return [true, $job, 'Thay đổi trạng thái thành công'];
+    }
+
+    public function searchJob($request) {
+        $requestData = $request->only([
+            'occupation_ids',
+            'location_id',
+            'welfare_ids',
+            'search',
+            'rank',
+            'job_type',
+            'salary_type',
+            'urgent',
+        ]);
+
+        $query = Job::leftJoin('companies', 'companies.id', '=', 'jobs.company_id')
+                    ->leftJoin('job_location', 'job_location.job_id', '=', 'jobs.id')
+                    ->leftJoin('company_location', 'company_location.id', '=', 'job_location.company_location_id')
+                    ->leftJoin('provinces', 'provinces.id', '=', 'company_location.province_id');
+                    
+        if (!empty($requestData['occupation_ids'])) {
+            $query->leftJoin('job_occupation', 'job_occupation.job_id', '=', 'jobs.id')
+                ->whereIn('job_occupation.occupation_id', $requestData['occupation_ids']);
+        }
+
+        if (!empty($requestData['location_id'])) {
+            $query->where('company_location.province_id', $requestData['location_id']);
+        }
+
+        if (!empty($requestData['welfare_ids'])) {
+            $query->leftJoin('job_welfare', 'job_welfare.job_id', '=', 'jobs.id')
+                ->whereIn('job_welfare.welfare_id', $requestData['welfare_ids']);
+        }
+
+        if (!empty($requestData['rank'])) {
+            $query->where('jobs.rank', $requestData['rank']);
+        }
+
+        if (!empty($requestData['job_type'])) {
+            $query->where('jobs.job_type', $requestData['job_type']);
+        }
+
+        if (!empty($requestData['salary_type'])) {
+            switch ($requestData['salary_type']) {
+                case 1:
+                    $query->where('jobs.salary_max', '<', 500);
+                    
+                    break;
+
+                case 2:
+                    $query->where(function ($query) {
+                        $query->whereBetween('jobs.salary_min', [500, 1000])
+                            ->orWhereBetween('jobs.salary_max', [500, 1000]);
+                    });
+
+                    break;
+
+                case 3:
+                    $query->where(function ($query) {
+                        $query->whereBetween('jobs.salary_min', [1000, 1500])
+                            ->orWhereBetween('jobs.salary_max', [1000, 1500]);
+                    });
+
+                    break;
+
+                case 4:
+                    $query->where(function ($query) {
+                        $query->whereBetween('jobs.salary_min', [1500, 2000])
+                            ->orWhereBetween('jobs.salary_max', [1500, 2000]);
+                    });
+
+                    break;
+
+                case 5:
+                    $query->where(function ($query) {
+                        $query->whereBetween('jobs.salary_min', [2000, 3000])
+                            ->orWhereBetween('jobs.salary_max', [2000, 3000]);
+                    });
+                
+                    break;
+
+                case 5:
+                    $query->where('jobs.salary_min', '>',3000);
+                
+                    break;
+            }
+        }
+
+        if (!empty($requestData['urgent'])) {
+            $query->leftJoin('job_urgent', 'job_urgent.job_id', '=', 'jobs.id')
+                ->whereIn('job_urgent.expiration_date', '>', date("Y-m-d", time()));
+        }
+
+        if (!empty($requestData['search'])) {
+            $query->where('jobs.job_title', 'LIKE', '%'.$requestData['search'].'%');
+        }
+
+        $query->where('jobs.expiration_date', '>', date("Y-m-d", time()))->where('jobs.status', config('custom.job-status.public'));
+        $query->with('tags', 'companyLocation', 'company');
+        $query->select(
+            'jobs.id',
+            'jobs.job_title',
+            'jobs.slug',
+            'jobs.rank',
+            'jobs.job_type',
+            'jobs.description',
+            'jobs.job_require',
+            'jobs.salary_min',
+            'jobs.salary_max',
+            'jobs.show_salary',
+            'jobs.created_at',
+            'jobs.company_id',
+            'companies.name as company_name',
+            'companies.logo',
+            DB::raw('group_concat(provinces.name) as province_name')
+        );
+        $query->groupBy('jobs.id');
+        
+        $limit = config('custom.paginate');
+
+        if (!empty(Cookie::get('limit')) && in_array(Cookie::get('limit'), (array)config('custom.page-limit'))) {
+            $limit = Cookie::get('limit');
+        }
+
+        $jobs = $query->paginate($limit);
+
+        return [true, $jobs, 'Success'];
+    }
+
+    public function jobDetail($id) {
+        $job = Job::where('id', $id)
+                    ->where('jobs.expiration_date', '>', date("Y-m-d", time()))
+                    ->where('jobs.status', config('custom.job-status.public'))
+                    ->first();
+
+        if (!empty($job)) {
+            return [true, [], 'Job không tồn tại'];
+        }
+
+        $userJobView = [
+            'user_id' => Auth::guard('api-user')->user()->id,
+            'job_id' => $id
+        ];
+
+        JobUserView::insert($userJobView);
+
+        return [true, $job, 'Success'];
+    }
+
+    public function applyJob($request, $id) {
+        $requestData = $request->only([
+            'position',
+            'number_phone',
+            'file_cv',
+        ]);
+
+        $job = Job::where('id', $id)
+                    ->where('jobs.expiration_date', '>', date("Y-m-d", time()))
+                    ->where('jobs.status', config('custom.job-status.public'))
+                    ->with('tags', 'occupations', 'companyLocation', 'company', 'welfare')
+                    ->first();
+
+        if (empty($job)) {
+            return [true, [], 'Job không tồn tại'];
+        }
+
+        $checkExistApply = JobUserApply::where('user_id', Auth::guard('api-user')->user()->id)
+                                        ->where('job_id', $id)->first();
+
+        if (!empty($checkExistApply)) {
+            return [true, $job, 'Job đã apply trước đó'];
+        }
+
+        $userJobApply = [
+            'user_id' => Auth::guard('api-user')->user()->id,
+            'job_id' => $id,
+            'position' => $requestData['position'],
+            'number_phone' => $requestData['number_phone'],
+        ];
+
+        if (!empty($request->file('file_cv'))) {
+            $file = $request->file('file_cv');
+            $file_name = time().'.'.$file->getClientOriginalExtension();
+            $destinationPath = public_path('/images/cv');
+            $file->move($destinationPath, $file_name);
+            $userJobApply['file_cv'] = $file_name;
+        } else {
+            $userJobApply['file_cv'] = Auth::guard('api-user')->user()->file_cv;
+        }
+        JobUserApply::insert($userJobApply);
+
+        return [true, $job, 'Success'];
+    }
+
+    public function jobFavourite($id) {
+        $job = Job::where('id', $id)
+                    ->where('jobs.expiration_date', '>', date("Y-m-d", time()))
+                    ->where('jobs.status', config('custom.job-status.public'))
+                    ->first();
+        if (empty($job)) {
+            return [true, [], 'Job không tồn tại'];
+        }
+
+        $checkExistFavourite = JobUserFavourite::where('user_id', Auth::guard('api-user')->user()->id)
+                                        ->where('job_id', $id)->first();
+
+        if (!empty($checkExistFavourite)) {
+            return [true, $job, 'Job đã ở trong danh dánh yêu thích'];
+        }
+
+        $userJobFavourite = [
+            'user_id' => Auth::guard('api-user')->user()->id,
+            'job_id' => $id
+        ];
+
+        JobUserFavourite::insert($userJobFavourite);
+        
+        return [true, $job, 'Success'];
     }
 }

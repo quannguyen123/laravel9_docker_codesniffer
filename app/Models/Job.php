@@ -55,7 +55,15 @@ class Job extends Model implements Transformable
     }
 
     public function companyLocation() {
-        return $this->belongsToMany('App\Models\CompanyLocation', 'job_location', 'job_id', 'company_location_id')->where('status', config('custom.status.active'))->select('company_location.id', 'company_location.name', 'company_location.address');
+        return $this->belongsToMany('App\Models\CompanyLocation', 'job_location', 'job_id', 'company_location_id')->with('province')->where('status', config('custom.status.active'))->select('company_location.id', 'company_location.name', 'company_location.address', 'company_location.province_id', 'company_location.company_id');
+    }
+
+    public function company() {
+        return $this->belongsTo('App\Models\Company', 'company_id', 'id')->select('id', 'name', 'number_phone', 'address', 'size', 'recipients_of_cv', 'info', 'logo', 'banner', 'video');
+    }
+
+    public function welfare() {
+        return $this->belongsToMany('App\Models\Welfare', 'job_welfare', 'job_id', 'welfare_id')->where('status', config('custom.status.active'))->select('welfares.id', 'welfares.name')->withPivot('content');
     }
 
 }

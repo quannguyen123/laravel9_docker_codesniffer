@@ -43,6 +43,9 @@ class User extends Authenticatable
         'address',
         'status',
         'avatar',
+        'position',
+        'phonecode',
+        'file_cv'
     ];
 
     /**
