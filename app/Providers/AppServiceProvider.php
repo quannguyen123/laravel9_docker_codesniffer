@@ -18,6 +18,8 @@ use App\Repositories\OrderDetailRepository;
 use App\Repositories\OrderDetailRepositoryEloquent;
 use App\Repositories\OrderRepository;
 use App\Repositories\OrderRepositoryEloquent;
+use App\Repositories\PartnerRepository;
+use App\Repositories\PartnerRepositoryEloquent;
 use App\Repositories\ServiceRepository;
 use App\Repositories\ServiceRepositoryEloquent;
 use App\Repositories\TagRepository;
@@ -56,5 +58,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(OrderDetailRepository::class, OrderDetailRepositoryEloquent::class);
         $this->app->bind(JobRepository::class, JobRepositoryEloquent::class);
         $this->app->bind(CompanyLocationRepository::class, CompanyLocationRepositoryEloquent::class);
+        $this->app->bind(PartnerRepository::class, PartnerRepositoryEloquent::class);
     }
 }
