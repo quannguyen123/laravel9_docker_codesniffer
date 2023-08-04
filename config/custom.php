@@ -33,6 +33,11 @@
         'service-type' => [
             'post-job' => 1,
             'find-cv' => 2,
+        ],
+
+        'user-type' => [
+            'type-user' => 1,
+            'type-partner' => 2,
         ]
     ];
 ?>

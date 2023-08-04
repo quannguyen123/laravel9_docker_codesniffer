@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Admin\OccupationController;
 use App\Http\Controllers\Api\Admin\ServiceController;
 use App\Http\Controllers\Api\Admin\TagController;
 use App\Http\Controllers\Api\Admin\TitleJobController;
+use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\Admin\WelfareController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,7 +37,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:api-admin', 'role:admi
         Route::get('detail/{occupation}', [OccupationController::class, 'detail']);
         Route::post('update/{occupation}', [OccupationController::class, 'update']);
         Route::delete('destroy/{occupation}', [OccupationController::class, 'destroy']);
-        Route::get('/change-status/{occupation}/{status}',  [OccupationController::class, 'changeStatus'])->whereIn('status', ['lock', 'active']);
+        Route::get('change-status/{occupation}/{status}',  [OccupationController::class, 'changeStatus'])->whereIn('status', ['lock', 'active']);
     });
 
     Route::prefix('welfare')->group(function() {
@@ -45,7 +46,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:api-admin', 'role:admi
         Route::get('detail/{welfare}', [WelfareController::class, 'detail']);
         Route::post('update/{welfare}', [WelfareController::class, 'update']);
         Route::delete('destroy/{welfare}', [WelfareController::class, 'destroy']);
-        Route::get('/change-status/{welfare}/{status}',  [WelfareController::class, 'changeStatus'])->whereIn('status', ['lock', 'active']);
+        Route::get('change-status/{welfare}/{status}',  [WelfareController::class, 'changeStatus'])->whereIn('status', ['lock', 'active']);
     });
     
     Route::prefix('tag')->group(function() {
@@ -54,7 +55,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:api-admin', 'role:admi
         Route::get('detail/{tag}', [TagController::class, 'detail']);
         Route::post('update/{tag}', [TagController::class, 'update']);
         Route::delete('destroy/{tag}', [TagController::class, 'destroy']);
-        Route::get('/change-status/{tag}/{status}',  [TagController::class, 'changeStatus'])->whereIn('status', ['lock', 'active']);
+        Route::get('change-status/{tag}/{status}',  [TagController::class, 'changeStatus'])->whereIn('status', ['lock', 'active']);
     });
 
     Route::prefix('job-title')->group(function() {
@@ -63,7 +64,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:api-admin', 'role:admi
         Route::get('detail/{job_title}', [TitleJobController::class, 'detail']);
         Route::post('update/{job_title}', [TitleJobController::class, 'update']);
         Route::delete('destroy/{job_title}', [TitleJobController::class, 'destroy']);
-        Route::get('/change-status/{job_title}/{status}',  [TitleJobController::class, 'changeStatus'])->whereIn('status', ['lock', 'active']);
+        Route::get('change-status/{job_title}/{status}',  [TitleJobController::class, 'changeStatus'])->whereIn('status', ['lock', 'active']);
     });
 
     Route::prefix('service')->group(function() {
@@ -72,7 +73,21 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:api-admin', 'role:admi
         Route::get('detail/{service}', [ServiceController::class, 'detail']);
         Route::post('update/{service}', [ServiceController::class, 'update']);
         Route::delete('destroy/{service}', [ServiceController::class, 'destroy']);
-        Route::get('/change-status/{service}/{status}',  [ServiceController::class, 'changeStatus'])->whereIn('status', ['lock', 'active']);
+        Route::get('change-status/{service}/{status}',  [ServiceController::class, 'changeStatus'])->whereIn('status', ['lock', 'active']);
+    });
+
+    Route::prefix('user')->group(function() {
+        Route::get('index', [UserController::class, 'index']);
+        Route::get('detail/{id}', [UserController::class, 'detail']);
+        Route::delete('destroy/{id}', [UserController::class, 'destroy']);
+        Route::get('change-status/{id}/{status}',  [UserController::class, 'changeStatus'])->whereIn('status', ['lock', 'active']);
+    });
+
+    Route::prefix('partner')->group(function() {
+        Route::get('index', [UserController::class, 'index']);
+        Route::get('detail/{id}', [UserController::class, 'detail']);
+        Route::delete('destroy/{id}', [UserController::class, 'destroy']);
+        Route::get('change-status/{id}/{status}',  [UserController::class, 'changeStatus'])->whereIn('status', ['lock', 'active']);
     });
 });
 

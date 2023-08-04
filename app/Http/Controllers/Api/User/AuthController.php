@@ -25,11 +25,14 @@ class AuthController extends BaseController
                 return $this->sendError('Validation Error.', $validator->errors());       
             }
     
-            $input = $request->all();
-            $input['password'] = bcrypt($input['password']);
+            $userData['name'] = $request['name'];
+            $userData['email'] = $request['email'];
+            $userData['password'] = bcrypt($request['password']);
+            $userData['type'] = config('custom.user-type.type-user');
+            $userData['status'] = config('custom.status.active');
 
             DB::beginTransaction();
-            $user = User::create($input);
+            $user = User::create($userData);
             $user->assignRole('user');
             DB::commit();
 
@@ -51,9 +54,17 @@ class AuthController extends BaseController
     public function login(Request $request)
     {
         try {
-            if((Auth::attempt(['email' => $request->email, 'password' => $request->password]))){
+            if((Auth::attempt(['email' => $request->email, 'password' => $request->password, 'type' => config('custom.user-type.type-user')]))){
                 $userId = Auth::user()->id;
                 $user = User::find($userId);
+                if ($user->status == config('custom.status.lock')) {
+                    Auth::user()->tokens->each(function($token, $key) {
+                        $token->delete();
+                    });
+
+                    return $this->sendResponse([], 'Tài khoản đã bị khóa. Vui lòng liên hệ admin để được hỗ trợ');
+                }
+
                 $success['token'] = $user->createToken('MyApp-User')->accessToken;
                 $success['name'] = $user->name;
                 

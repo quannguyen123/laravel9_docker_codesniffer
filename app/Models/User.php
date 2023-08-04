@@ -23,12 +23,21 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'email',
+        'email_verified_at',
         'password',
+        'remember_token',
+        'created_by',
+        'updated_by',
+        'deleted_by',
+        'deleted_at',
+        'created_at',
+        'updated_at',
         'first_name',
         'last_name',
         'code',
         'gender',
         'job_title',
+        'position',
         'current_rank',
         'experience',
         'highest_degree',
@@ -37,15 +46,13 @@ class User extends Authenticatable
         'nation',
         'marital_status',
         'province_id',
-        'province_id',
-        'district_id',
         'district_id',
         'address',
         'status',
         'avatar',
-        'position',
         'phonecode',
-        'file_cv'
+        'file_cv',
+        'type',
     ];
 
     /**

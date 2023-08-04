@@ -69,7 +69,10 @@ class AuthController extends BaseController
                 'number_phone' => $requestData['number_phone'],
                 'email' => $requestData['email'],
                 'password' => $requestData['password'],
+                'type' => config('custom.user-type.type-partner'),
+                'status' => config('custom.status.active')
             ];
+            
             $user = User::create($userData);
             $user->assignRole('partner');
             /**
@@ -157,9 +160,18 @@ class AuthController extends BaseController
     public function login(Request $request)
     {
         try {
-            if((Auth::attempt(['email' => $request->email, 'password' => $request->password]))){
+            if((Auth::attempt(['email' => $request->email, 'password' => $request->password, 'type' => config('custom.user-type.type-partner')]))){
                 $userId = Auth::user()->id;
                 $user = User::find($userId);
+
+                if ($user->status == config('custom.status.lock')) {
+                    Auth::user()->tokens->each(function($token, $key) {
+                        $token->delete();
+                    });
+
+                    return $this->sendResponse([], 'Tài khoản đã bị khóa. Vui lòng liên hệ admin để được hỗ trợ');
+                }
+                
                 $success['token'] = $user->createToken('MyApp-Partner')->accessToken;
                 $success['name'] = $user->name;
                 

@@ -57,6 +57,7 @@ class UserRepositoryEloquent extends BaseRepository implements UserRepository
                 ->orWhere('name', 'LIKE', '%'.$filter['search'].'%');
             });
         }
+        $query->where('type', config('custom.user-type.type-user'));
 
         $limit = config('custom.paginate');
 
