@@ -6,10 +6,6 @@
             10,25,50,100,250,500
         ],
 
-        'status2' => [
-            10,25,50,100,250,500
-        ],
-
         'status' => [
             'active' => 1,
             'lock' => 2
@@ -38,6 +34,11 @@
         'user-type' => [
             'type-user' => 1,
             'type-partner' => 2,
-        ]
+        ],
+
+        'user-role' => [
+            'role-hr' => 3,
+            'role-accountant' => 4,
+        ],
     ];
 ?>

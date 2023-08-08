@@ -23,8 +23,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('partner/register', [AuthController::class, 'register']);
-Route::post('partner/login', [AuthController::class, 'login']);
+
+Route::prefix('partner')->group(function() {
+    Route::post('register', [AuthController::class, 'register']);
+    Route::post('login', [AuthController::class, 'login']);
+
+    Route::prefix('partner-management')->group(function() {
+        Route::post('accept-invite', [PartnerManagementController::class, 'accessInvite']);
+        Route::post('reject-invite', [PartnerManagementController::class, 'rejectInvite']);
+    });
+});
 
 Route::group( ['prefix' => 'partner', 'middleware' => ['auth:api-user', 'role:partner'] ],function(){
     Route::post('test', function() {
@@ -36,9 +44,14 @@ Route::group( ['prefix' => 'partner', 'middleware' => ['auth:api-user', 'role:pa
     Route::prefix('partner-management')->group(function() {
         Route::get('index', [PartnerManagementController::class, 'index']);
         Route::get('detail/{id}', [PartnerManagementController::class, 'detail']);
-        Route::post('store', [PartnerManagementController::class, 'store']);
-        Route::put('update/{id}', [PartnerManagementController::class, 'update']);
-        Route::delete('destroy/{id}', [PartnerManagementController::class, 'destroy']);
+        Route::post('update/{id}', [PartnerManagementController::class, 'update']);
+        Route::get('change-status/{id}/{status}',  [PartnerManagementController::class, 'changeStatus'])->whereIn('status', ['lock', 'active']);
+        Route::get('choose-partner-admin/{id}',  [PartnerManagementController::class, 'choosePartnerAdmin']);
+
+        Route::post('send-mail-invite', [PartnerManagementController::class, 'sendMailInvite']);
+        Route::get('list-invite-partner', [PartnerManagementController::class, 'listInvitePartner']);
+        Route::post('cancel-invite-partner', [PartnerManagementController::class, 'cancelInvitePartner']);
+        Route::post('re-invite-partner', [PartnerManagementController::class, 'reInvitePartner']);
     });
 
     Route::prefix('company')->group(function() {
@@ -86,6 +99,5 @@ Route::group( ['prefix' => 'partner', 'middleware' => ['auth:api-user', 'role:pa
         Route::post('update/{id}', [JobController::class, 'update']);
         Route::get('destroy/{id}', [JobController::class, 'destroy']);
         Route::get('change-status/{id}',  [JobController::class, 'changeStatus']);
-        
     });
 });

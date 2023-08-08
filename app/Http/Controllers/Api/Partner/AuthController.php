@@ -75,6 +75,7 @@ class AuthController extends BaseController
             
             $user = User::create($userData);
             $user->assignRole('partner');
+            $user->assignRole('partner_admin');
             /**
              * end create user
              */
