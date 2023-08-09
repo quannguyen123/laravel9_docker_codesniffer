@@ -23,6 +23,9 @@ php artisan view:clear
 cài đặt passport
 php artisan passport:install
 
+chạy job send mail
+php artisan queue:make
+
 
 https://github.com/kimtrien/vietnam-zone
 import dữ liệu provinces và districts
