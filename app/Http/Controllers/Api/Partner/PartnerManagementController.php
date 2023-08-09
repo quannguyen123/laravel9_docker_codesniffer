@@ -3,14 +3,10 @@
 namespace App\Http\Controllers\Api\Partner;
 
 use App\Http\Controllers\BaseController;
-use App\Jobs\SendMailInvitePartner;
-use App\Models\User;
 use App\Services\Admins\PartnerManagementService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 
 class PartnerManagementController extends BaseController
 {
@@ -262,7 +258,7 @@ class PartnerManagementController extends BaseController
                 return $this->sendError('Validation Error.', $validator->errors());       
             }
 
-            [$status, $res, $mess] = $this->partnerManagementService->reInvitePartner();
+            [$status, $res, $mess] = $this->partnerManagementService->reInvitePartner($request);
     
             if ($status) {
                 return $this->sendResponse($res, $mess);

@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class SendMailInvitePartner extends Mailable
+class SendMailApplyJobForUser extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -28,7 +28,11 @@ class SendMailInvitePartner extends Mailable
 
     public function build()
     {
-        return $this->subject('Send Mail Invite Partner')
-                    ->view('emails.mail-invite-partner', ['details' => $this->mailData]);
+        return $this->subject('Bạn vừa ứng tuyển vào ' . $this->mailData['company']['name'])
+                    ->view('emails.mail-apply-job-for-user', ['details' => $this->mailData]);
     }
 }
+
+
+
+

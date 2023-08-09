@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Jobs\SendMailApplyJobForPartner;
+use App\Jobs\SendMailApplyJobForUser;
 use App\Models\Job;
 use App\Models\JobLocation;
 use App\Models\JobOccupation;
@@ -107,9 +109,9 @@ class JobService {
             'show_salary' => !empty($requestData['show_salary']) ? $requestData['show_salary'] : null,
             'introducing_letter' => !empty($requestData['introducing_letter']) && $requestData['introducing_letter'] ? 1 : 0,
             'language_cv' => !empty($requestData['language_cv']) ? $requestData['language_cv'] : null,
-            'recipients_of_cv' => !empty($requestData['language_cv']) ? $requestData['recipients_of_cv'] : null,
+            'recipients_of_cv' => !empty($requestData['recipients_of_cv']) ? $requestData['recipients_of_cv'] : null,
             'show_recipients_of_cv' => !empty($requestData['show_recipients_of_cv']) && $requestData['show_recipients_of_cv'] ? 1 : 0,
-            'email_recipients_of_cv' => !empty($requestData['language_cv']) ? $requestData['email_recipients_of_cv'] : null,
+            'email_recipients_of_cv' => !empty($requestData['email_recipients_of_cv']) ? $requestData['email_recipients_of_cv'] : null,
             'post_anonymously' => !empty($requestData['post_anonymously']) && $requestData['post_anonymously'] ? 1 : 0,
             'company_id' => Auth::guard('api-user')->user()->company[0]['id'],
             'expiration_date' => $expirationDate,
@@ -486,19 +488,22 @@ class JobService {
                     ->with('tags', 'occupations', 'companyLocation', 'company', 'welfare')
                     ->first();
 
+        $company = $job->company->toArray();
+
         if (empty($job)) {
             return [true, [], 'Job không tồn tại'];
         }
 
-        $checkExistApply = JobUserApply::where('user_id', Auth::guard('api-user')->user()->id)
+        $user = Auth::guard('api-user')->user();
+        $checkExistApply = JobUserApply::where('user_id', $user->id)
                                         ->where('job_id', $id)->first();
-
+        
         if (!empty($checkExistApply)) {
             return [true, $job, 'Job đã apply trước đó'];
         }
 
         $userJobApply = [
-            'user_id' => Auth::guard('api-user')->user()->id,
+            'user_id' => $user->id,
             'job_id' => $id,
             'position' => $requestData['position'],
             'number_phone' => $requestData['number_phone'],
@@ -511,9 +516,16 @@ class JobService {
             $file->move($destinationPath, $file_name);
             $userJobApply['file_cv'] = $file_name;
         } else {
-            $userJobApply['file_cv'] = Auth::guard('api-user')->user()->file_cv;
+            $userJobApply['file_cv'] = $user->file_cv;
         }
         JobUserApply::insert($userJobApply);
+        $mailData = [
+            'user' => $user,
+            'company' => $company,
+            'job' => $job
+        ];
+        SendMailApplyJobForUser::dispatch($mailData)->delay((now()->addMinute(1)));
+        SendMailApplyJobForPartner::dispatch($mailData)->delay((now()->addMinute(1)));
 
         return [true, $job, 'Success'];
     }

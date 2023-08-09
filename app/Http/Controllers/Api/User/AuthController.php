@@ -15,7 +15,8 @@ class AuthController extends BaseController
     {
         try {
             $validator = Validator::make($request->all(), [
-                'name' => 'required',
+                'first_name' => 'required',
+                'last_name' => 'required',
                 'email' => 'required|email',
                 'password' => 'required',
                 'c_password' => 'required|same:password',
@@ -25,7 +26,8 @@ class AuthController extends BaseController
                 return $this->sendError('Validation Error.', $validator->errors());       
             }
     
-            $userData['name'] = $request['name'];
+            $userData['first_name'] = $request['first_name'];
+            $userData['last_name'] = $request['last_name'];
             $userData['email'] = $request['email'];
             $userData['password'] = bcrypt($request['password']);
             $userData['type'] = config('custom.user-type.type-user');
@@ -37,7 +39,7 @@ class AuthController extends BaseController
             DB::commit();
 
             $success['token'] =  $user->createToken('MyApp-User')->accessToken;
-            $success['name'] =  $user->name;
+            $success['name'] =  $user->first_name . ' ' . $user->last_name;
     
             return $this->sendResponse($success, 'User register successfully.');
         } catch (\Exception $e) {

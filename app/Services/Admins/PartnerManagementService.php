@@ -4,13 +4,11 @@ namespace App\Services\Admins;
 
 use App\Jobs\SendMailInvitePartner;
 use App\Models\CompanyUser;
-use App\Models\PartnerInvite;
 use App\Models\User;
 use App\Repositories\PartnerInviteRepository;
 use App\Repositories\PartnerRepository;
 use App\Repositories\UserRepository;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;

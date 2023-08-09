@@ -15,7 +15,10 @@ api
 php artisan vendor:publish --provider="Laravel\Sanctum\SanctumServiceProvider"
 
 php artisan config:cache
+
 php artisan config:clear
+php artisan cache:clear
+php artisan view:clear
 
 cài đặt passport
 php artisan passport:install
