@@ -68,7 +68,6 @@ class AuthController extends BaseController
                 }
 
                 $success['token'] = $user->createToken('MyApp-User')->accessToken;
-                $success['name'] = $user->name;
                 
                 return $this->sendResponse($success, 'User login successfully.');
             } 

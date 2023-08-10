@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\Partner;
 
 use App\Http\Controllers\BaseController;
+use App\Jobs\SendMailResetPassword;
 use App\Models\Company;
 use App\Models\CompanyJobTitle;
 use App\Models\CompanyOccupation;
@@ -10,10 +11,13 @@ use App\Models\CompanyRank;
 use App\Models\CompanyUser;
 use App\Models\RecruitmentRank;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class AuthController extends BaseController
 {
@@ -144,7 +148,6 @@ class AuthController extends BaseController
             DB::commit();
 
             $success['token'] =  $user->createToken('MyApp-Partner')->accessToken;
-            $success['name'] =  $user->name;
     
             return $this->sendResponse($success, 'Partner register successfully.');
         } catch (\Exception $e) {
@@ -174,7 +177,6 @@ class AuthController extends BaseController
                 }
                 
                 $success['token'] = $user->createToken('MyApp-Partner')->accessToken;
-                $success['name'] = $user->name;
                 
                 return $this->sendResponse($success, 'Partner login successfully.');
             } 
@@ -196,6 +198,123 @@ class AuthController extends BaseController
             $success = [];
             return $this->sendResponse($success, 'Partner logout success');
         } catch (\Exception $e) {
+            return $this->sendError($e->getMessage());
+        }
+    }
+
+    public function resetPassword(Request $request) {
+        try {
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|email'
+            ]);
+
+            if($validator->fails()){
+                return $this->sendError('Validation Error.', $validator->errors());       
+            }
+
+            $user = User::where('email', $request->email)->first();
+
+            if (empty($user)) {
+                return $this->sendResponse([], 'Chúng tôi đã gửi link quên mật khẩu đến mail của bạn. Vui lòng kiểm tra email. 123');
+            }
+
+            $user->token = Str::random(60);
+            $user->token_expiration_date = Carbon::today()->addDays(7);
+            $user->save();
+            
+            $mailData = [
+                'user' => [
+                    'email' => $user->email,
+                    'name' => $user->first_name . ' ' . $user->last_name,
+                    'url' => env('DOMAIN_FRONTEND') . 'partner-reset-password' . '?' . 'token=' . $user->token . '&email=' . $user->email
+                ]
+            ];
+
+            SendMailResetPassword::dispatch($mailData)->delay((now()->addMilliseconds(10)));
+    
+            return $this->sendResponse([], 'Chúng tôi đã gửi link quên mật khẩu đến mail của bạn. Vui lòng kiểm tra email.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->sendError($e->getMessage());
+        }
+    }
+
+    public function createNewPassword(Request $request) {
+        try {
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|email',
+                'password' => 'required',
+                'c_password' => 'required|same:password',
+                'token' => 'required'
+            ]);
+            
+            if($validator->fails()){
+                return $this->sendError('Validation Error.', $validator->errors());
+            }
+
+            $requestData = $request->only([
+                'email',
+                'password',
+                'c_password',
+                'token',
+            ]);
+    
+            $requestData['password'] = bcrypt($requestData['password']);
+
+            $user = User::where('token', $requestData['token'])->where('token_expiration_date', '>=', Carbon::today())->first();
+            if (empty($user)) {
+                return $this->sendResponse([], 'Không hợp lệ vui lòng thử lại');
+            }
+
+            $user->password = $requestData['password'];
+            $user->token = null;
+            $user->token_expiration_date = null;
+            $user->save();
+
+            $success['token'] =  $user->createToken('MyApp-Partner')->accessToken;
+    
+            return $this->sendResponse($success, 'Partner register successfully.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return $this->sendError($e->getMessage());
+        }
+    }
+
+    public function changePassword(Request $request) {
+        try {
+            $validator = Validator::make($request->all(), [
+                'old_password' => 'required',
+                'password' => 'required',
+                'c_password' => 'required|same:password',
+            ]);
+            
+            if($validator->fails()){
+                return $this->sendError('Validation Error.', $validator->errors());
+            }
+
+            $requestData = $request->only([
+                'password',
+                'old_password',
+            ]);
+            
+            $user = Auth::user();
+
+            if (!Hash::check($requestData['old_password'], $user->password)) {
+                return $this->sendError('Mật khẩu cũ không đúng. Vui lòng kiểm tra lại');
+            }
+    
+            $requestData['password'] = bcrypt($requestData['password']);
+
+            $user = User::find($user->id);
+            
+            $user->password = $requestData['password'];
+            $user->save();
+
+            $success['token'] =  $user->createToken('MyApp-Partner')->accessToken;
+    
+            return $this->sendResponse($success, 'Thay đổi mật khẩu thành công.');
+        } catch (\Exception $e) {
+            DB::rollBack();
             return $this->sendError($e->getMessage());
         }
     }

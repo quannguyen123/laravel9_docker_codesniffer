@@ -55,6 +55,8 @@ class User extends Authenticatable
         'phonecode',
         'file_cv',
         'type',
+        'token',
+        'token_expiration_date'
     ];
 
     /**

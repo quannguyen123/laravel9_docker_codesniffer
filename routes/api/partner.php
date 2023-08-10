@@ -27,6 +27,9 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('partner')->group(function() {
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
+    
+    Route::post('reset-password', [AuthController::class, 'resetPassword']);
+    Route::post('create-new-password', [AuthController::class, 'createNewPassword']);
 
     Route::prefix('partner-management')->group(function() {
         Route::post('accept-invite', [PartnerManagementController::class, 'accessInvite']);
@@ -38,6 +41,8 @@ Route::group( ['prefix' => 'partner', 'middleware' => ['auth:api-user', 'role:pa
     Route::post('test', function() {
         return 'trang chu hr';
     });
+
+    Route::post('change-password', [AuthController::class, 'changePassword']);
 
     Route::post('logout', [AuthController::class, 'logout']);
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\Partner\AuthController as PartnerAuthController;
 use App\Http\Controllers\Api\Partner\TagController;
 use App\Http\Controllers\Api\Public\JobTitleController;
 use App\Http\Controllers\Api\Public\OccupationController;
@@ -17,14 +18,20 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
-Route::post('user/register', [AuthController::class, 'register']);
-Route::post('user/login', [AuthController::class, 'login'])->name('login');
+Route::group(['prefix' => 'user'],function(){
+    Route::post('register', [AuthController::class, 'register']);
+    Route::post('login', [AuthController::class, 'login'])->name('login');
+    
+    Route::post('reset-password', [PartnerAuthController::class, 'resetPassword']);
+    Route::post('create-new-password', [PartnerAuthController::class, 'createNewPassword']);
+});
 
 Route::group(['prefix' => 'user', 'middleware' => ['auth:api-user', 'role:user']],function(){
     Route::post('test', function() {
         return 'trang chu user';
     });
+
+    Route::post('change-password', [PartnerAuthController::class, 'changePassword']);
 
     Route::post('logout', [AuthController::class, 'logout']);
 });
