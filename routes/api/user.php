@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Partner\AuthController as PartnerAuthController;
 use App\Http\Controllers\Api\Partner\TagController;
 use App\Http\Controllers\Api\Public\JobTitleController;
 use App\Http\Controllers\Api\Public\OccupationController;
+use App\Http\Controllers\Api\User\AlertJobController;
 use App\Http\Controllers\Api\User\AuthController;
 use App\Http\Controllers\Api\User\JobController;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +33,14 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth:api-user', 'role:user']
     });
 
     Route::post('change-password', [PartnerAuthController::class, 'changePassword']);
+
+    Route::prefix('alert-job')->group(function() {
+        Route::get('index', [AlertJobController::class, 'index']);
+        Route::post('store', [AlertJobController::class, 'store']);
+        Route::get('detail/{id}', [AlertJobController::class, 'detail']);
+        Route::post('update/{id}', [AlertJobController::class, 'update']);
+        Route::delete('destroy/{id}', [AlertJobController::class, 'destroy']);
+    });
 
     Route::post('logout', [AuthController::class, 'logout']);
 });

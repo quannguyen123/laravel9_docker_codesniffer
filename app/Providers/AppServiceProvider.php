@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repositories\AlertJobRepository;
+use App\Repositories\AlertJobRepositoryEloquent;
 use App\Repositories\CompanyLocationRepository;
 use App\Repositories\CompanyLocationRepositoryEloquent;
 use App\Repositories\CompanyRepository;
@@ -62,5 +64,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(CompanyLocationRepository::class, CompanyLocationRepositoryEloquent::class);
         $this->app->bind(PartnerRepository::class, PartnerRepositoryEloquent::class);
         $this->app->bind(PartnerInviteRepository::class, PartnerInviteRepositoryEloquent::class);
+        $this->app->bind(AlertJobRepository::class, AlertJobRepositoryEloquent::class);
     }
 }
