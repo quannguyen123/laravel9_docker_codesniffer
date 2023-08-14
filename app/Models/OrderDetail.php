@@ -31,4 +31,7 @@ class OrderDetail extends Model implements Transformable
         'used_time',
     ];
 
+    public function service() {
+        return $this->belongsTo('App\Models\Service', 'service_id', 'id')->select('id', 'name', 'type', 'price', 'used_time', 'description', 'content');
+    }
 }

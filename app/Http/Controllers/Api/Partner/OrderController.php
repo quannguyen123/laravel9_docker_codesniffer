@@ -31,7 +31,6 @@ class OrderController extends BaseController
 
             return $this->sendResponse($res, 'Success.');
         } catch (\Exception $e) {
-            DB::rollBack();
             return $this->sendError($e->getMessage());
         }
     }

@@ -26,8 +26,8 @@ class OrderService {
 
     public function index() {
         $order = $this->orderRepository
-        // ->with(['orderDetail'])
-        ->findWhere(['company_id' => Auth::guard('api-user')->user()->company[0]['id']]);
+                    ->with(['orderDetail'])
+                    ->findWhere(['company_id' => Auth::guard('api-user')->user()->company[0]['id']]);
 
         return [true, $order];
     }
@@ -80,5 +80,18 @@ class OrderService {
         ]);
 
         return [true, $order];
+    }
+
+    public function adminIndex($request) {
+        $orders = $this->orderRepository->getOrder($request);
+
+        return [true, $orders, 'Success'];
+    }
+
+    public function adminDetail($order) {
+        $order->orderDetail;
+        $order->company;
+        
+        return [true, $order, 'Success'];
     }
 }

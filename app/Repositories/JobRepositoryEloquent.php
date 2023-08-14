@@ -149,7 +149,6 @@ class JobRepositoryEloquent extends BaseRepository implements JobRepository
             $limit = Cookie::get('limit');
         }
 
-        dd($query->toSql());
         return $query->paginate($limit);
     }
 }

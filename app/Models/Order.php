@@ -38,7 +38,11 @@ class Order extends Model implements Transformable
     ];
     
     public function orderDetail() {
-        return $this->belongsToMany('App\Models\Service', 'order_detail', 'order_id', 'service_id')->withPivot('price', 'count', 'total', 'used_time');
+        return $this->belongsToMany(Service::class, 'order_detail', 'order_id', 'service_id')->select( 'id', 'name', 'type', 'price', 'used_time', 'description', 'content', 'image', 'note', 'status')->withPivot('price', 'count', 'total', 'used_time');
+    }
+
+    public function company() {
+        return $this->belongsTo(Company::class, 'company_id', 'id')->select( 'id', 'name', 'number_phone', 'address', 'size', 'recipients_of_cv', 'info', 'logo', 'banner', 'video', 'purpose', 'sum_budget_recruitment', 'status');
     }
 
 }

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admins\ManagerAccountController;
 use App\Http\Controllers\Api\Admin\AuthController;
 use App\Http\Controllers\Api\Admin\OccupationController;
+use App\Http\Controllers\Api\Admin\OrderController;
 use App\Http\Controllers\Api\Admin\PartnerController;
 use App\Http\Controllers\Api\Admin\ServiceController;
 use App\Http\Controllers\Api\Admin\TagController;
@@ -89,6 +90,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:api-admin', 'role:admi
         Route::get('detail/{id}', [PartnerController::class, 'detail']);
         Route::delete('destroy/{id}', [PartnerController::class, 'destroy']);
         Route::get('change-status/{id}/{status}',  [PartnerController::class, 'changeStatus'])->whereIn('status', ['lock', 'active']);
+    });
+
+    Route::prefix('order')->group(function() {
+        Route::get('index', [OrderController::class, 'adminIndex']);
+        Route::get('{order}', [OrderController::class, 'adminDetail']);
     });
 });
 
