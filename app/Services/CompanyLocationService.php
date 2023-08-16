@@ -27,7 +27,7 @@ class CompanyLocationService {
     {
         $companyLocaltion = CompanyLocation::where('company_id', Auth::guard('api-user')->user()->company[0]['id'])->get();
 
-        return $companyLocaltion;
+        return [true, $companyLocaltion, 'Success'];
     }
 
     /**
@@ -44,7 +44,7 @@ class CompanyLocationService {
             'province_id',
         ]);
         
-        $companyLocaltion = [
+        $companyLocaltionData = [
             'name' => $requestData['name'],
             'address' => $requestData['address'],
             'status' => config('custom.status.active'),
@@ -52,7 +52,13 @@ class CompanyLocationService {
             'province_id' => $requestData['province_id'],
         ];
 
-        return $this->repository->create($companyLocaltion);
+        $companyLocaltion = $this->repository->create($companyLocaltionData);
+
+        if (empty($companyLocaltion)) {
+            return [false, [], 'Có lỗi sảy ra'];
+        }
+
+        return [true, $companyLocaltion, 'Success'];
     }
 
     public function detail($id) {
@@ -60,7 +66,11 @@ class CompanyLocationService {
                                     ->where('company_id', Auth::guard('api-user')->user()->company[0]['id'])
                                     ->first();
 
-        return $companyLocaltion;
+        if (empty($companyLocaltion)) {
+            return [false, [], 'Không tồn tại địa chỉ công ty'];
+        }
+
+        return [true, $companyLocaltion, 'Success'];
     }
 
     public function update(Request $request, $id)
@@ -76,7 +86,7 @@ class CompanyLocationService {
                                     ->first();
 
         if (empty($companyLocaltion)) {
-            return [];
+            return [false, [], 'Không tồn tại địa chỉ công ty'];
         }
 
         $companyLocaltion['name'] = $requestData['name'];
@@ -84,8 +94,8 @@ class CompanyLocationService {
         $companyLocaltion['province_id'] = $requestData['province_id'];
 
         $companyLocaltion->save();
-
-        return $companyLocaltion;
+        
+        return [true, $companyLocaltion, 'Success'];
     }
 
     /**
@@ -96,14 +106,22 @@ class CompanyLocationService {
      */
     public function destroy($id)
     {
+        $checkExist = CompanyLocation::where('id', $id)
+                                    ->where('company_id', Auth::guard('api-user')->user()->company[0]['id'])
+                                    ->first();
+
+                                    // return [$checkExist, 'Địa chỉ công ty không tồn tại'];
+        if (empty($checkExist)) {
+            return [false, 'Địa chỉ công ty không tồn tại'];
+        }
         $isDelete = CompanyLocation::where('id', $id)
                                     ->where('company_id', Auth::guard('api-user')->user()->company[0]['id'])
                                     ->delete();
         
         if ($isDelete) {
-            return true;
+            return [true, 'Success'];
         }
 
-        return false;
+        return [false, 'Error'];
     }
 }

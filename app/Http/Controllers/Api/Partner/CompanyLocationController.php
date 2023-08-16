@@ -24,11 +24,15 @@ class CompanyLocationController extends BaseController
     public function index(Request $request)
     {
         try {
-            $companyLocationAll = $this->companyLocationService->index($request);
+            [$status, $companyLocationAll, $mess] = $this->companyLocationService->index($request);
 
-            $res['companyLocationAll'] = $companyLocationAll;
+            if ($status) {
+                $res['companyLocationAll'] = $companyLocationAll;
 
-            return $this->sendResponse($res, 'Success.');
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendResponse([], $mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -53,9 +57,15 @@ class CompanyLocationController extends BaseController
                 return $this->sendError('Validation Error.', $validator->errors());
             }
     
-            $companyLocation = $this->companyLocationService->store($request);
-    
-            return $this->sendResponse($companyLocation, 'Success.');
+            [$status, $companyLocation, $mess] = $this->companyLocationService->store($request);
+
+            if ($status) {
+                $res['companyLocation'] = $companyLocation;
+
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendResponse([], $mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -70,9 +80,15 @@ class CompanyLocationController extends BaseController
     public function detail($id)
     {
         try {            
-            $res['companyLocation'] = $this->companyLocationService->detail($id);
+            [$status, $companyLocation, $mess] = $this->companyLocationService->detail($id);
 
-            return $this->sendResponse($res, 'Success.');
+            if ($status) {
+                $res['companyLocation'] = $companyLocation;
+
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendResponse([], $mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -98,9 +114,15 @@ class CompanyLocationController extends BaseController
                 return $this->sendError('Validation Error.', $validator->errors());
             }
             
-            $data = $this->companyLocationService->update($request, $id);
+            [$status, $companyLocation, $mess] = $this->companyLocationService->update($request, $id);
 
-            return $this->sendResponse($data, 'Success.');
+            if ($status) {
+                $res['companyLocation'] = $companyLocation;
+
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendResponse([], $mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -115,13 +137,14 @@ class CompanyLocationController extends BaseController
     public function destroy($id)
     {
         try {
-            $status = $this->companyLocationService->destroy($id);
+            [$status, $mess] = $this->companyLocationService->destroy($id);
 
+            return [$status, $mess];
             if ($status) {
-                return $this->sendResponse($status, 'Success.');
+                return $this->sendResponse($status, $mess);
             }
             
-            return $this->sendResponse($status, 'Error.');
+            return $this->sendResponse($status, $mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }

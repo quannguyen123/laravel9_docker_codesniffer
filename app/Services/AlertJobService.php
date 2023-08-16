@@ -81,11 +81,11 @@ class AlertJobService {
                             ->where('user_id', Auth::guard('api-user')->user()->id)
                             ->first();
         
-        $alertJob = $this->convertData([$alertJob]);
-
         if (empty($alertJob)) {
             return [false, [], 'Thông báo việc làm không tồn tại'];
         }
+
+        $alertJob = $this->convertData([$alertJob]);
 
         return [true, $alertJob[0], 'Success'];
     }

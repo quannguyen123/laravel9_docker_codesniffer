@@ -423,7 +423,8 @@ class JobService {
             $query->where('jobs.job_title', 'LIKE', '%'.$requestData['search'].'%');
         }
 
-        $query->where('jobs.expiration_date', '>', date("Y-m-d", time()))->where('jobs.status', config('custom.job-status.public'));
+        $query->where('jobs.expiration_date', '>', date("Y-m-d", time()))
+                ->where('jobs.status', config('custom.job-status.public'));
         $query->with('tags', 'companyLocation', 'company');
         $query->select(
             'jobs.id',
@@ -438,6 +439,8 @@ class JobService {
             'jobs.show_salary',
             'jobs.created_at',
             'jobs.company_id',
+            'jobs.expiration_date',
+            'jobs.status',
             'companies.name as company_name',
             'companies.logo',
             DB::raw('group_concat(provinces.name) as province_name')
@@ -459,9 +462,10 @@ class JobService {
         $job = Job::where('id', $id)
                     ->where('jobs.expiration_date', '>', date("Y-m-d", time()))
                     ->where('jobs.status', config('custom.job-status.public'))
+                    ->with('tags', 'companyLocation', 'company')
                     ->first();
 
-        if (!empty($job)) {
+        if (empty($job)) {
             return [true, [], 'Job không tồn tại'];
         }
 
