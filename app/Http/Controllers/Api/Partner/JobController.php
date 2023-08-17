@@ -192,9 +192,13 @@ class JobController extends BaseController
     public function detail($id)
     {
         try {
-            $res['job'] = $this->jobService->detail($id);
+            [$status, $res['job'], $mess] = $this->jobService->detail($id);
 
-            return $this->sendResponse($res, 'Success.');
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -239,10 +243,12 @@ class JobController extends BaseController
                 return $this->sendError('Validation Error.', $validator->errors());
             }
             
-            // return $request->all();
-            [$status, $data, $mess] = $this->jobService->update($request, $id);
+            [$status, $res, $mess] = $this->jobService->update($request, $id);
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
 
-            return $this->sendResponse($data, $mess);
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -257,9 +263,13 @@ class JobController extends BaseController
     public function destroy($id)
     {
         try {
-            [$status, $mess] = $this->jobService->destroy($id);
+            [$status, $data, $mess] = $this->jobService->destroy($id);
             
-            return $this->sendResponse($status, $mess);
+            if ($status) {
+                return $this->sendResponse($data, $mess);
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -280,9 +290,13 @@ class JobController extends BaseController
                 return $this->sendError('Status không đúng');
             }
 
-            [$code, $res['job'], $mess] = $this->jobService->changeStatus($id, $status);
+            [$status, $res['job'], $mess] = $this->jobService->changeStatus($id, $status);
             
-            return $this->sendResponse($res, $mess);
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }

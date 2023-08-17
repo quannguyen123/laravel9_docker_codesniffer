@@ -20,7 +20,12 @@ class PaymentService {
     ) {
     }
 
-    public function pay($order) {
+    public function pay($orderId) {
+        $order = Order::where('id', $orderId)->first();
+        if (empty($order)) {
+            return [false, 'Order không tồn tại', ''];
+        }
+
         $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
         $vnp_Returnurl = "http://localhost/vnpay_php/vnpay_return.php";
         $vnp_apiUrl = "http://sandbox.vnpayment.vn/merchant_webapi/merchant.html";
@@ -28,10 +33,10 @@ class PaymentService {
         //Config input format
         //Expire
         $startTime = date("YmdHis");
-        $expire = date('YmdHis',strtotime('+15 minutes',strtotime($startTime)));
+        $expire = date('YmdHis', strtotime('+15 minutes',strtotime($startTime)));
 
 
-        if ($order['company_id'] != Auth::guard('api-user')->user()->company[0]['id']) {
+        if ($order->company_id != Auth::guard('api-user')->user()->company[0]['id']) {
             return [false, 'Đơn hàng không phù hợp. Vui lòng kiểm tra lại', ''];
         }
 
@@ -90,7 +95,7 @@ class PaymentService {
             $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
         }
 
-        return [true, '', $vnp_Url];
+        return [true, 'Success', $vnp_Url];
     }
 
     public function paymentReturn($request) {

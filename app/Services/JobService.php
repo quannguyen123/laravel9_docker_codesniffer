@@ -160,7 +160,11 @@ class JobService {
                             ->with('tags', 'occupations', 'companyLocation')
                             ->first();
 
-        return $job;
+        if (empty($job)) {
+            return [false, [], 'Không tìm thấy công việc'];
+        }
+
+        return [true, $job, 'Không tìm thấy công việc'];
     }
 
     public function update(Request $request, $id)
@@ -171,7 +175,7 @@ class JobService {
                     ->first();
 
         if (empty($job)) {
-            return [true, [], 'Không tìm thấy công việc'];
+            return [false, [], 'Không tìm thấy công việc'];
         }
 
         $requestData = $request->only([
@@ -287,14 +291,14 @@ class JobService {
                     ->first();
 
         if (empty($job)) {
-            return [true, 'Không tìm thấy công việc'];
+            return [false, [], 'Không tìm thấy công việc'];
         }
 
         $job['deleted_by'] = Auth::guard('api-user')->user()->id;
         $job['deleted_at'] = date("Y-m-d H:i:s", time());
         $job->save();
 
-        return [true, 'Xóa bài viết thành công'];
+        return [true, [], 'Xóa bài viết thành công'];
     }
 
     public function changeStatus($id, $status) {
@@ -303,7 +307,7 @@ class JobService {
             ->first();
 
         if (empty($job)) {
-            return [true, [], 'Không tìm thấy công việc'];
+            return [false, [], 'Không tìm thấy công việc'];
         }
 
         $status = config('custom.job-status.' . $status);
@@ -318,7 +322,7 @@ class JobService {
                                 ->get();
 
             if (empty($companyService)) {
-                return [true, [], 'Thay đổi trạng thái không thành công'];
+                return [false, [], 'Thay đổi trạng thái không thành công'];
             }
         }
 

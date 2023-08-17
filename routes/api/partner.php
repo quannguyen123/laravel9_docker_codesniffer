@@ -92,7 +92,7 @@ Route::group( ['prefix' => 'partner', 'middleware' => ['auth:api-user', 'role:pa
     });
 
     Route::prefix('payment')->group(function() {
-        Route::get('/{order}/vnpay', [PaymentController::class, 'pay']);
+        Route::get('/{orderId}/vnpay', [PaymentController::class, 'pay']);
         Route::get('payment-return', [PaymentController::class, 'paymentReturn'])->name('payment-return');
         Route::get('callback', [PaymentController::class, 'callback'])->name('payment-callback');
     });

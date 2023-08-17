@@ -14,17 +14,17 @@ class PaymentController extends BaseController
     ) {
     }
 
-    public function pay(Order $order) {
+    public function pay($orderId) {
         try {
-            [$status, $mess, $vnpUrl] = $this->paymentService->pay($order);
+            [$status, $mess, $vnpUrl] = $this->paymentService->pay($orderId);
 
-            if ($status == false) {
+            if (!$status) {
                 return $this->sendError($mess);
             }
 
             $res['vnpUrl'] = $vnpUrl;
 
-            return $this->sendResponse($res, 'Success.');
+            return $this->sendResponse($res, $mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -34,9 +34,11 @@ class PaymentController extends BaseController
         try {
             [$status, $mess] = $this->paymentService->paymentReturn($request);
 
-            $res['mess'] = $mess;
+            if ($status) {
+                return $this->sendResponse([], $mess);
+            }
 
-            return $this->sendResponse($res, 'Success.');
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }

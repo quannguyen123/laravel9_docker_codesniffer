@@ -100,7 +100,7 @@ class JobRepositoryEloquent extends BaseRepository implements JobRepository
             $query->where('created_by', $request['filters']['created_by']);
         }
 
-        $query = $query->where('company_id', Auth::guard('api-user')->user()->company[0]['id']);
+        $query = $query->where('jobs.company_id', Auth::guard('api-user')->user()->company[0]['id']);
         
         if (!empty($filter['status'])) {
             $status = Arr::get($filter, 'status', '');
