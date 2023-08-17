@@ -96,9 +96,13 @@ class WelfareController extends BaseController
                 return $this->sendError('Validation Error.', $validator->errors());
             }
             
-            $data = $this->welfareService->update($request, $welfare);
+            [$status, $res['welfare'], $mess] = $this->welfareService->update($request, $welfare);
 
-            return $this->sendResponse($data, 'Success.');
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -110,9 +114,13 @@ class WelfareController extends BaseController
                 return $this->sendError('Status không đúng');
             }
 
-            $data = $this->welfareService->changeStatus($welfare, $status);
+            [$status, $res['welfare'], $mess] = $this->welfareService->changeStatus($welfare, $status);
             
-            return $this->sendResponse($data, 'Success.');
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -127,9 +135,13 @@ class WelfareController extends BaseController
     public function destroy(Welfare $welfare)
     {
         try {
-            $data = $this->welfareService->destroy($welfare);
+            [$status, $res['welfare'], $mess] = $this->welfareService->destroy($welfare);
             
-            return $this->sendResponse($data, 'Success.');
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }

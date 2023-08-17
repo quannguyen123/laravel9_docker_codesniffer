@@ -71,7 +71,7 @@ class WelfareService {
         $welfare['status'] = config('custom.status.' . $status);
         $welfare->save();
 
-        return [];
+        return [true, $welfare, 'Success'];
     }
 
     public function update(Request $request, $welfare)
@@ -93,7 +93,7 @@ class WelfareService {
 
         $welfare->save();
 
-        return $welfare;
+        return [true, $welfare, 'Success'];
     }
 
     /**
@@ -108,6 +108,6 @@ class WelfareService {
         $welfare['deleted_at'] = date("Y-m-d H:i:s", time());
         $welfare->save();
 
-        return [];
+        return [true, $welfare, 'Success'];
     }
 }
