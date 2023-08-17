@@ -36,10 +36,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:api-admin', 'role:admi
     Route::prefix('occupation')->group(function() {
         Route::get('index', [OccupationController::class, 'index']);
         Route::post('store', [OccupationController::class, 'store']);
-        Route::get('detail/{occupation}', [OccupationController::class, 'detail']);
-        Route::post('update/{occupation}', [OccupationController::class, 'update']);
-        Route::delete('destroy/{occupation}', [OccupationController::class, 'destroy']);
-        Route::get('change-status/{occupation}/{status}',  [OccupationController::class, 'changeStatus'])->whereIn('status', ['lock', 'active']);
+        Route::get('detail/{occupationId}', [OccupationController::class, 'detail']);
+        Route::post('update/{occupationId}', [OccupationController::class, 'update']);
+        Route::delete('destroy/{occupationId}', [OccupationController::class, 'destroy']);
+        Route::get('change-status/{occupationId}/{status}',  [OccupationController::class, 'changeStatus'])->whereIn('status', ['lock', 'active']);
     });
 
     Route::prefix('welfare')->group(function() {

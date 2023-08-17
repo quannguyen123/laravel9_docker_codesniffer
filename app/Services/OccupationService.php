@@ -79,15 +79,37 @@ class OccupationService {
         return $this->repository->create($occupation);
     }
 
-    public function changeStatus($occupation, $status) {
+    public function detail($occupationId) {
+        $occupation = $this->repository->findWhere(['id' => $occupationId])->first();
+
+        if (empty($occupation)) {
+            return [false, [], 'Không tồn tại ngành nghề'];
+        }
+
+        return [true, $occupation, 'Không tồn tại ngành nghề'];
+    }
+
+    public function changeStatus($occupationId, $status) {
+        $occupation = $this->repository->findWhere(['id' => $occupationId])->first();
+
+        if (empty($occupation)) {
+            return [false, [], 'Không tồn tại ngành nghề'];
+        }
+        
         $occupation['status'] = config('custom.status.' . $status);
         $occupation->save();
 
-        return [];
+        return [true, $occupation, 'Success'];
     }
 
-    public function update(Request $request, $occupation)
+    public function update(Request $request, $occupationId)
     {
+        $occupation = $this->repository->findWhere(['id' => $occupationId])->first();
+
+        if (empty($occupation)) {
+            return [false, [], 'Không tồn tại ngành nghề'];
+        }
+        
         $requestData = $request->only(['name', 'slug', 'parent_id']);
         
         $occupation['name'] = $requestData['name'];
@@ -97,7 +119,7 @@ class OccupationService {
 
         $occupation->save();
 
-        return $occupation;
+        return [true, $occupation, 'Success'];
     }
 
     /**
@@ -106,12 +128,18 @@ class OccupationService {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($occupation)
+    public function destroy($occupationId)
     {
+        $occupation = $this->repository->findWhere(['id' => $occupationId])->first();
+
+        if (empty($occupation)) {
+            return [false, [], 'Không tồn tại ngành nghề'];
+        }
+
         $occupation['deleted_by'] = Auth::guard('api-admin')->user()->id;
         $occupation['deleted_at'] = date("Y-m-d H:i:s", time());
         $occupation->save();
 
-        return [];
+        return [true, [], 'Success'];
     }
 }

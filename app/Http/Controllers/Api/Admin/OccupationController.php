@@ -66,12 +66,17 @@ class OccupationController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function detail(Occupation $occupation)
+    public function detail($occupationId)
     {
-        try {            
-            $res['occupation'] = $occupation;
+        try {      
+            [$status, $res['occupation'], $mess] = $this->occupationService->detail($occupationId);
 
-            return $this->sendResponse($res, 'Success.');
+            if ($status) {
+
+                return $this->sendResponse($res, 'Success.');
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -84,35 +89,43 @@ class OccupationController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Occupation $occupation)
+    public function update(Request $request, $occupationId)
     {
         try {
             $validator = Validator::make($request->all(), [
-                'name' => 'required|unique:occupations,name,' . $occupation['id'],
-                'slug' => 'nullable|required|unique:occupations,slug,' . $occupation['id'],
+                'name' => 'required|unique:occupations,name,' . $occupationId,
+                'slug' => 'nullable|required|unique:occupations,slug,' . $occupationId,
             ]);
             
             if($validator->fails()){
                 return $this->sendError('Validation Error.', $validator->errors());
             }
             
-            $data = $this->occupationService->update($request, $occupation);
+            [$status, $res, $mess] = $this->occupationService->update($request, $occupationId);
 
-            return $this->sendResponse($data, 'Success.');
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
     }
 
-    public function changeStatus(Occupation $occupation, $status) {
+    public function changeStatus($occupationId, $status) {
         try {
             if (!in_array($status, array_keys(config('custom.status')))) {
                 return $this->sendError('Status không đúng');
             }
 
-            $data = $this->occupationService->changeStatus($occupation, $status);
+            [$status, $res, $mess] = $this->occupationService->changeStatus($occupationId, $status);
             
-            return $this->sendResponse($data, 'Success.');
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -124,12 +137,16 @@ class OccupationController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Occupation $occupation)
+    public function destroy($occupationId)
     {
         try {
-            $data = $this->occupationService->destroy($occupation);
+            [$status, $res, $mess] = $this->occupationService->destroy($occupationId);
             
-            return $this->sendResponse($data, 'Success.');
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
