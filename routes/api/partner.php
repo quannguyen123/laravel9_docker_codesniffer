@@ -75,7 +75,7 @@ Route::group( ['prefix' => 'partner', 'middleware' => ['auth:api-user', 'role:pa
 
     Route::prefix('service')->group(function() {
         Route::get('list', [ServiceController::class, 'list']);
-        Route::get('detail/{service}', [ServiceController::class, 'detail']);
+        Route::get('detail/{serviceId}', [ServiceController::class, 'detail']);
 
         Route::post('add-to-cart', [ServiceController::class, 'addToCart']);
         Route::post('edit-cart-item', [ServiceController::class, 'editCartItem']);

@@ -43,7 +43,16 @@ class ServiceService {
     public function list() {
         $data = $this->repository->where('status', config('custom.status.active'))->get();
 
-        return $data;
+        return [true, $data, 'Success'];
+    }
+
+    public function detail($serviceId) {
+        $service = $this->repository->findWhere(['id' => $serviceId])->first();
+        if (empty($service)) {
+            return [false,  [], 'Không tồn tại dịch vụ'];
+        }
+
+        return [true,  $service, 'Success'];
     }
 
     public function addToCart($request) {
@@ -52,15 +61,16 @@ class ServiceService {
             'quantity',
         ]);
 
-        $service = $this->repository->find($requestData['service_id']);
+        $service = $this->repository->findWhere(['id' => $requestData['service_id']])->first();
 
         if (empty($service)) {
-            return [false,  'Không tồn tại dịch vụ'];
+            return [false,  [], 'Không tồn tại dịch vụ'];
         }
 
         Cart::add($service['id'], $service['name'], $requestData['quantity'], $service['price'], 0, ['image' => $service['image'], 'used_time' => $service['used_time']]);
         $cart = Cart::content();
-        return $cart;
+
+        return [true,  $cart, 'Success'];
     }
 
     public function editCartItem($request) {
@@ -72,7 +82,7 @@ class ServiceService {
         Cart::update($requestData['row_id'], $requestData['quantity']);
         $cart = Cart::content();
 
-        return $cart;
+        return [true,  $cart, 'Success'];
     }
 
     public function cartInfo() {

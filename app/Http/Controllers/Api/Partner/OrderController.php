@@ -27,9 +27,9 @@ class OrderController extends BaseController
 
     public function store() {
         try {
-            [$res['status'], $res['order'], $res['msg']] = $this->orderService->store();
+            [$status, $res['order'], $mess] = $this->orderService->store();
 
-            return $this->sendResponse($res, 'Success.');
+            return $this->sendResponse($res, $mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }

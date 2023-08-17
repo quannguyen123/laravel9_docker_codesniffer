@@ -18,21 +18,28 @@ class ServiceController extends BaseController
 
     public function list() {
         try {
-            $serviceAll = $this->serviceService->list();
+            [$status, $serviceAll, $mess] = $this->serviceService->list();
 
-            $res['serviceAll'] = $serviceAll;
+            if ($status) {
+                $res['serviceAll'] = $serviceAll;
+                return $this->sendResponse($res, 'Success.');
+            }
 
-            return $this->sendResponse($res, 'Success.');
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
     }
 
-    public function detail(Service $service) {
+    public function detail($serviceId) {
         try {
-            $res['service'] = $service;
+            [$status, $res['service'], $mess] = $this->serviceService->detail($serviceId);
+    
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
 
-            return $this->sendResponse($res, 'Success.');
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -49,9 +56,14 @@ class ServiceController extends BaseController
                 return $this->sendError('Validation Error.', $validator->errors());
             }
     
-            $res['cart'] = $this->serviceService->addToCart($request);
+            [$status, $res['cart'], $mess] = $this->serviceService->addToCart($request);
     
-            return $this->sendResponse($res, 'Success.');
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendError($mess);
+
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -68,9 +80,13 @@ class ServiceController extends BaseController
                 return $this->sendError('Validation Error.', $validator->errors());
             }
     
-            $res['cart'] = $this->serviceService->editCartItem($request);
+            [$status, $res['cart'], $mess] = $this->serviceService->editCartItem($request);
 
-            return $this->sendResponse($res, 'Success.');
+            if ($status) {
+                return $this->sendResponse($res, 'Success.');
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
