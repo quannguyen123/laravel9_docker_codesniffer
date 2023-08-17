@@ -74,9 +74,13 @@ class TagController extends BaseController
                 return $this->sendError('Validation Error.', $validator->errors());
             }
             
-            $data = $this->tagService->update($request, $tag);
+            [$status, $res['tag'], $mess] = $this->tagService->update($request, $tag);
 
-            return $this->sendResponse($data, 'Success.');
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -88,9 +92,13 @@ class TagController extends BaseController
                 return $this->sendError('Status không đúng');
             }
 
-            $data = $this->tagService->changeStatus($tag, $status);
+            [$status, $res['tag'], $mess] = $this->tagService->changeStatus($tag, $status);
             
-            return $this->sendResponse($data, 'Success.');
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -99,9 +107,13 @@ class TagController extends BaseController
     public function destroy(Tag $tag)
     {
         try {
-            $data = $this->tagService->destroy($tag);
+            [$status, $res['tag'], $mess] = $this->tagService->destroy($tag);
             
-            return $this->sendResponse($data, 'Success.');
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }

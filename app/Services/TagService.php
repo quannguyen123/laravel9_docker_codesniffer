@@ -125,7 +125,7 @@ class TagService {
         $tag['status'] = config('custom.status.' . $status);
         $tag->save();
 
-        return [];
+        return [true, $tag, 'Success'];
     }
 
     public function update(Request $request, $tag)
@@ -174,7 +174,7 @@ class TagService {
 
         TagSuggest::insert($tagSuggest);
 
-        return $tag;
+        return [true, $tag, 'Success'];
     }
 
     /**
@@ -192,6 +192,6 @@ class TagService {
         $tag['deleted_at'] = date("Y-m-d H:i:s", time());
         $tag->save();
 
-        return [];
+        return [true, [], 'Success'];
     }
 }
