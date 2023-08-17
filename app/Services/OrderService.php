@@ -29,7 +29,7 @@ class OrderService {
                     ->with(['orderDetail'])
                     ->findWhere(['company_id' => Auth::guard('api-user')->user()->company[0]['id']]);
 
-        return [true, $order];
+        return [true, $order, 'Success'];
     }
 
     public function store() {
@@ -73,13 +73,17 @@ class OrderService {
 
     public function orderInfo($id) {
         $order = $this->orderRepository
-        ->with(['orderDetail'])
-        ->findWhere([
-            'id' => $id,
-            'company_id' => Auth::guard('api-user')->user()->company[0]['id'],
-        ]);
+                    ->with(['orderDetail'])
+                    ->findWhere([
+                        'id' => $id,
+                        'company_id' => Auth::guard('api-user')->user()->company[0]['id'],
+                    ])->toArray();
 
-        return [true, $order];
+        if (empty($order)) {
+            return [false, [], 'Không tồn tại đơn hàng'];
+        }
+        
+        return [true, $order, 'Success'];
     }
 
     public function adminIndex($request) {

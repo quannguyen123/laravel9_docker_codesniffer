@@ -17,9 +17,13 @@ class OrderController extends BaseController
 
     public function index() {
         try {
-            $res['order'] = $this->orderService->index();
+            [$status, $res['order'], $mess] = $this->orderService->index();
 
-            return $this->sendResponse($res, 'Success.');
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -29,7 +33,11 @@ class OrderController extends BaseController
         try {
             [$status, $res['order'], $mess] = $this->orderService->store();
 
-            return $this->sendResponse($res, $mess);
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -37,9 +45,13 @@ class OrderController extends BaseController
 
     public function orderInfo($id) {
         try {
-            $res['order'] = $this->orderService->orderInfo($id);
+            [$status, $res['order'], $mess] = $this->orderService->orderInfo($id);
 
-            return $this->sendResponse($res, 'Success.');
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
