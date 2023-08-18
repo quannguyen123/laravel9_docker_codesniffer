@@ -46,7 +46,11 @@ class UserController extends BaseController
 
             $res['user'] = $user;
 
-            return $this->sendResponse($res, $mess);
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -58,9 +62,12 @@ class UserController extends BaseController
                 return $this->sendError('Status không đúng');
             }
 
-            [$status, $data, $mess] = $this->userService->changeStatus($id, $status);
-            
-            return $this->sendResponse($data, $mess) ;
+            [$status, $res['user'], $mess] = $this->userService->changeStatus($id, $status);
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -75,9 +82,12 @@ class UserController extends BaseController
     public function destroy($id)
     {
         try {
-            [$status, $data, $mess] = $this->userService->destroy($id);
-            
-            return $this->sendResponse($data, $mess);
+            [$status, $res['user'], $mess] = $this->userService->destroy($id);
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }

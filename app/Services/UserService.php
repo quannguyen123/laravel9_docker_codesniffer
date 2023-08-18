@@ -45,7 +45,7 @@ class UserService {
         $user = $this->repository->where('type', config('custom.user-type.type-user'))->where('id', $id)->first();
 
         if (empty($user)) {
-            return [true, [], 'User không tồn tại'];
+            return [false, [], 'User không tồn tại'];
         }
         
         return [true, $user, 'Success'];
@@ -55,7 +55,7 @@ class UserService {
         $user = $this->repository->where('type', config('custom.user-type.type-user'))->where('id', $id)->first();
 
         if (empty($user)) {
-            return [true, [], 'User không tồn tại'];
+            return [false, [], 'User không tồn tại'];
         }
 
         $user = $this->repository->update([
@@ -78,7 +78,7 @@ class UserService {
         $user = $this->repository->where('type', config('custom.user-type.type-user'))->where('id', $id)->first();
 
         if (empty($user)) {
-            return [true, [], 'User không tồn tại'];
+            return [false, [], 'User không tồn tại'];
         }
 
         $this->repository->update([
