@@ -150,15 +150,25 @@ class ServiceService {
         return $this->repository->create($service);
     }
 
-    public function changeStatus($service, $status) {
+    public function changeStatus($serviceId, $status) {
+        $service = $this->repository->findWhere(['id' => $serviceId])->first();
+        if (empty($service)) {
+            return [false,  [], 'Không tồn tại dịch vụ'];
+        }
+
         $service['status'] = config('custom.status.' . $status);
         $service->save();
 
-        return [];
+        return [true,  $service, 'Success'];
     }
 
-    public function update(Request $request, $service)
+    public function update(Request $request, $serviceId)
     {
+        $service = $this->repository->findWhere(['id' => $serviceId])->first();
+        if (empty($service)) {
+            return [false,  [], 'Không tồn tại dịch vụ'];
+        }
+
         $requestData = $request->only([
             'name',
             'type',
@@ -190,7 +200,7 @@ class ServiceService {
         }
         $service->save();
 
-        return $service;
+        return [true,  $service, 'Success'];
     }
 
     /**
@@ -199,12 +209,17 @@ class ServiceService {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($service)
+    public function destroy($serviceId)
     {
+        $service = $this->repository->findWhere(['id' => $serviceId])->first();
+        if (empty($service)) {
+            return [false,  [], 'Không tồn tại dịch vụ'];
+        }
+
         $service['deleted_by'] = Auth::guard('api-admin')->user()->id;
         $service['deleted_at'] = date("Y-m-d H:i:s", time());
         $service->save();
 
-        return [];
+        return [true, [], 'Success'];
     }
 }

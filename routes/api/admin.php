@@ -63,19 +63,19 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:api-admin', 'role:admi
     Route::prefix('job-title')->group(function() {
         Route::get('index', [TitleJobController::class, 'index']);
         Route::post('store', [TitleJobController::class, 'store']);
-        Route::get('detail/{job_title}', [TitleJobController::class, 'detail']);
-        Route::post('update/{job_title}', [TitleJobController::class, 'update']);
-        Route::delete('destroy/{job_title}', [TitleJobController::class, 'destroy']);
-        Route::get('change-status/{job_title}/{status}',  [TitleJobController::class, 'changeStatus'])->whereIn('status', ['lock', 'active']);
+        Route::get('detail/{job_title_id}', [TitleJobController::class, 'detail']);
+        Route::post('update/{job_title_id}', [TitleJobController::class, 'update']);
+        Route::delete('destroy/{job_title_id}', [TitleJobController::class, 'destroy']);
+        Route::get('change-status/{job_title_id}/{status}',  [TitleJobController::class, 'changeStatus'])->whereIn('status', ['lock', 'active']);
     });
 
     Route::prefix('service')->group(function() {
         Route::get('index', [ServiceController::class, 'index']);
         Route::post('store', [ServiceController::class, 'store']);
-        Route::get('detail/{service}', [ServiceController::class, 'detail']);
-        Route::post('update/{service}', [ServiceController::class, 'update']);
-        Route::delete('destroy/{service}', [ServiceController::class, 'destroy']);
-        Route::get('change-status/{service}/{status}',  [ServiceController::class, 'changeStatus'])->whereIn('status', ['lock', 'active']);
+        Route::get('detail/{serviceId}', [ServiceController::class, 'detail']);
+        Route::post('update/{serviceId}', [ServiceController::class, 'update']);
+        Route::delete('destroy/{serviceId}', [ServiceController::class, 'destroy']);
+        Route::get('change-status/{serviceId}/{status}',  [ServiceController::class, 'changeStatus'])->whereIn('status', ['lock', 'active']);
     });
 
     Route::prefix('user')->group(function() {

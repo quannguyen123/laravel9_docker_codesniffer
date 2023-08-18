@@ -53,22 +53,26 @@ class ServiceController extends BaseController
         }
     }
 
-    public function detail(Service $service)
+    public function detail($serviceId)
     {
-        try {            
-            $res['service'] = $service;
+        try {         
+            [$status, $res['service'], $mess] = $this->serviceService->detail($serviceId);
+            
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
 
-            return $this->sendResponse($res, 'Success.');
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
     }
 
-    public function update(Request $request, Service $service)
+    public function update(Request $request, $serviceId)
     {
         try {
             $validator = Validator::make($request->all(), [
-                'name' => 'required|unique:services,name,' . $service['id'],
+                'name' => 'required|unique:services,name,' . $serviceId,
                 'type' => 'required|numeric',
                 'price' => 'required|numeric',
                 'used_time' => 'required|numeric',
@@ -78,35 +82,47 @@ class ServiceController extends BaseController
             if($validator->fails()){
                 return $this->sendError('Validation Error.', $validator->errors());
             }
-            
-            $data = $this->serviceService->update($request, $service);
 
-            return $this->sendResponse($data, 'Success.');
+            [$status, $res['service'], $mess] = $this->serviceService->update($request, $serviceId);
+
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
     }
 
-    public function changeStatus(Service $service, $status) {
+    public function changeStatus($serviceId, $status) {
         try {
             if (!in_array($status, array_keys(config('custom.status')))) {
                 return $this->sendError('Status không đúng');
             }
 
-            $data = $this->serviceService->changeStatus($service, $status);
+            [$status, $res['service'], $mess] = $this->serviceService->changeStatus($serviceId, $status);
             
-            return $this->sendResponse($data, 'Success.');
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
     }
 
-    public function destroy(Service $service)
+    public function destroy($serviceId)
     {
         try {
-            $data = $this->serviceService->destroy($service);
+            [$status, $res['service'], $mess] = $this->serviceService->destroy($serviceId);
             
-            return $this->sendResponse($data, 'Success.');
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
