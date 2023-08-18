@@ -64,12 +64,16 @@ class TitleJobController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function detail(JobTitle $jobTitle)
+    public function detail($job_title_id)
     {
         try {            
-            $res['jobTitle'] = $jobTitle;
+            [$status, $res['jobTitle'], $mess] = $this->jobTitleService->detail($job_title_id);
 
-            return $this->sendResponse($res, 'Success.');
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -82,11 +86,11 @@ class TitleJobController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, JobTitle $jobTitle)
+    public function update(Request $request, $job_title_id)
     {
         try {
             $validator = Validator::make($request->all(), [
-                'name' => 'required|unique:job_titles,name,' . $jobTitle['id'],
+                'name' => 'required|unique:job_titles,name,' . $job_title_id,
                 'icon' => 'nullable|mimes:jpeg,jpg,png,gif|max:5120'
             ]);
             
@@ -94,23 +98,31 @@ class TitleJobController extends BaseController
                 return $this->sendError('Validation Error.', $validator->errors());
             }
             
-            $data = $this->jobTitleService->update($request, $jobTitle);
+            [$status, $res['jobTitle'], $mess] = $this->jobTitleService->update($request, $job_title_id);
 
-            return $this->sendResponse($data, 'Success.');
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
     }
 
-    public function changeStatus(JobTitle $jobTitle, $status) {
+    public function changeStatus($job_title_id, $status) {
         try {
             if (!in_array($status, array_keys(config('custom.status')))) {
                 return $this->sendError('Status không đúng');
             }
 
-            $data = $this->jobTitleService->changeStatus($jobTitle, $status);
-            
-            return $this->sendResponse($data, 'Success.');
+            [$status, $res['jobTitle'], $mess] = $this->jobTitleService->changeStatus($job_title_id, $status);
+
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -122,12 +134,16 @@ class TitleJobController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(JobTitle $jobTitle)
+    public function destroy($job_title_id)
     {
         try {
-            $data = $this->jobTitleService->destroy($jobTitle);
-            
-            return $this->sendResponse($data, 'Success.');
+            [$status, $res['jobTitle'], $mess] = $this->jobTitleService->destroy($job_title_id);
+
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }

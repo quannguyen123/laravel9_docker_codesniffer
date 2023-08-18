@@ -39,6 +39,16 @@ class JobTitleService {
         return $this->repository->search($filters);
     }
 
+    public function detail($job_title_id) {
+        $jobTitle = $this->repository->findWhere(['id' => $job_title_id])->first();
+
+        if (empty($jobTitle)) {
+            return [false, [], 'Không tìm thấy tiêu để'];
+        }
+
+        return [true, $jobTitle, 'Success'];
+    }
+
     public function publicSearchJobTitle($request)
     {
         $filters = [];
@@ -75,23 +85,35 @@ class JobTitleService {
         return $this->repository->create($jobTitle);
     }
 
-    public function changeStatus($jobTitle, $status) {
+    public function changeStatus($job_title_id, $status) {
+        $jobTitle = $this->repository->findWhere(['id' => $job_title_id])->first();
+
+        if (empty($jobTitle)) {
+            return [false, [], 'Không tìm thấy tiêu để'];
+        }
+
         $jobTitle['status'] = config('custom.status.' . $status);
         $jobTitle->save();
 
-        return [];
+        return [true, $jobTitle, 'Success'];
     }
 
-    public function update(Request $request, $jobTitle)
+    public function update($request, $job_title_id)
     {
+        $jobTitle = $this->repository->findWhere(['id' => $job_title_id])->first();
+
+        if (empty($jobTitle)) {
+            return [false, [], 'Không tìm thấy tiêu để'];
+        }
+
         $requestData = $request->only(['name']);
         
         $jobTitle['name'] = $requestData['name'];
         $jobTitle['updated_by'] = Auth::guard('api-admin')->user()->id;
-
+        
         $jobTitle->save();
-
-        return $jobTitle;
+        
+        return [true, $jobTitle, 'Success'];
     }
 
     /**
@@ -100,12 +122,18 @@ class JobTitleService {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($jobTitle)
+    public function destroy($job_title_id)
     {
+        $jobTitle = $this->repository->findWhere(['id' => $job_title_id])->first();
+
+        if (empty($jobTitle)) {
+            return [false, [], 'Không tìm thấy tiêu để'];
+        }
+
         $jobTitle['deleted_by'] = Auth::guard('api-admin')->user()->id;
         $jobTitle['deleted_at'] = date("Y-m-d H:i:s", time());
         $jobTitle->save();
-
-        return [];
+        
+        return [true, [], 'Success'];
     }
 }
