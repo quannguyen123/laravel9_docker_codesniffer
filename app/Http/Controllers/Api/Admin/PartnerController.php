@@ -40,11 +40,12 @@ class PartnerController extends BaseController
     public function detail($id)
     {
         try {
-            [$status, $user, $mess] = $this->partnerService->detail($id);
+            [$status, $res['partner'], $mess] = $this->partnerService->detail($id);
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
 
-            $res['user'] = $user;
-
-            return $this->sendResponse($res, $mess);
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -56,9 +57,12 @@ class PartnerController extends BaseController
                 return $this->sendError('Status không đúng');
             }
 
-            [$status, $data, $mess] = $this->partnerService->changeStatus($id, $status);
-            
-            return $this->sendResponse($data, $mess) ;
+            [$status, $res['partner'], $mess] = $this->partnerService->changeStatus($id, $status);
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }
@@ -73,9 +77,12 @@ class PartnerController extends BaseController
     public function destroy($id)
     {
         try {
-            [$status, $data, $mess] = $this->partnerService->destroy($id);
-            
-            return $this->sendResponse($data, $mess);
+            [$status, $res['partner'], $mess] = $this->partnerService->destroy($id);
+            if ($status) {
+                return $this->sendResponse($res, $mess);
+            }
+
+            return $this->sendError($mess);
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
         }

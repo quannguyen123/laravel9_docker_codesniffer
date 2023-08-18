@@ -42,9 +42,7 @@ class UserController extends BaseController
     public function detail($id)
     {
         try {
-            [$status, $user, $mess] = $this->userService->detail($id);
-
-            $res['user'] = $user;
+            [$status, $res['user'], $mess] = $this->userService->detail($id);
 
             if ($status) {
                 return $this->sendResponse($res, $mess);
