@@ -21,6 +21,15 @@ class PartnerManagementController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
+    /**
+     * @OA\Get(
+     *     path="/api/partner/partner-management/index",
+     *     summary="Danh sách partner",
+     *     tags={"Partner-Management Partner"},
+     *     security={{"bearer":{}}},
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function index(Request $request)
     {
         try {
@@ -39,6 +48,17 @@ class PartnerManagementController extends BaseController
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     */
+
+    /**
+     * @OA\Get(
+     *     path="/api/partner/partner-management/detail/{id}",
+     *     summary="Thông tin chi tiết partner",
+     *     tags={"Partner-Management Partner"},
+     *     security={{"bearer":{}}},
+     *     @OA\Parameter(in="path", name="id", required=true, description="Id partner", @OA\Schema(type="string")),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
      */
     public function detail($id)
     {
@@ -59,6 +79,32 @@ class PartnerManagementController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     */
+
+    /**
+     * @OA\Post(
+     *     path="/api/partner/partner-management/update/{id}",
+     *     tags={"Partner-Management Partner"},
+     *     summary="Cập nhật thông tin partner",
+     *     description="",
+     *     security={{"bearer":{}}},
+     *     operationId="update",
+     *     @OA\Parameter(in="path", name="id", required=true, description="Id partner", @OA\Schema(type="string")),
+     *     @OA\RequestBody(
+     *          @OA\JsonContent(),
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  type="object",
+     *                  required={"first_name", "last_name", "role"},
+     *                  @OA\Property(property="first_name", type="string", format="string"),
+     *                  @OA\Property(property="last_name", type="string", format="string"),
+     *                  @OA\Property(property="role", type="integer", format="int64", description="3 or 4")
+     *              )
+     *          ),
+     *     ),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
      */
     public function update(Request $request, $id)
     {
@@ -86,6 +132,17 @@ class PartnerManagementController extends BaseController
         }
     }
     
+    /**
+     * @OA\Get(
+     *     path="/api/partner/partner-management/change-status/{id}/{status}",
+     *     summary="Thay đổi trạng thái partner",
+     *     tags={"Partner-Management Partner"},
+     *     security={{"bearer":{}}},
+     *     @OA\Parameter(in="path", name="id", required=true, description="Id partner", @OA\Schema(type="integer")),
+     *     @OA\Parameter(in="path", name="status", required=true, description="Trạng thái (lock or active)", @OA\Schema(type="string")),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function changeStatus($id, $status)
     {
         try {
@@ -106,9 +163,21 @@ class PartnerManagementController extends BaseController
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/partner/partner-management/choose-partner-admin/{id}",
+     *     summary="Thay đổi admin của công ty",
+     *     tags={"Partner-Management Partner"},
+     *     security={{"bearer":{}}},
+     *     @OA\Parameter(in="path", name="id", required=true, description="Id partner", @OA\Schema(type="string")),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function choosePartnerAdmin($id) {
         try {
+            DB::beginTransaction();
             [$status, $data, $mess] = $this->partnerManagementService->choosePartnerAdmin($id);
+            DB::commit();
             
             $res['partner'] = $data;
             if ($status) {
@@ -117,6 +186,7 @@ class PartnerManagementController extends BaseController
                 return $this->sendError($mess);
             }
         } catch (\Exception $e) {
+            DB::rollBack();
             return $this->sendError($e->getMessage());
         }
     }
@@ -132,6 +202,30 @@ class PartnerManagementController extends BaseController
         //
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/partner/partner-management/send-mail-invite",
+     *     tags={"Partner-Management Partner"},
+     *     summary="Gửi link mời làm partner",
+     *     description="",
+     *     security={{"bearer":{}}},
+     *     @OA\RequestBody(
+     *          @OA\JsonContent(),
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  type="object",
+     *                  required={"email", "first_name", "last_name", "role"},
+     *                  @OA\Property(property="first_name", type="string", format="string"),
+     *                  @OA\Property(property="last_name", type="string", format="string"),
+     *                  @OA\Property(property="email", type="string", format="string"),
+     *                  @OA\Property(property="role", type="integer", format="int", description="3 or 4")
+     *              )
+     *          ),
+     *     ),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function sendMailInvite(Request $request) {
         try {
             $validator = Validator::make($request->all(), [
@@ -158,6 +252,29 @@ class PartnerManagementController extends BaseController
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/partner/partner-management/accept-invite",
+     *     tags={"Partner-Management Partner"},
+     *     summary="Chấp nhận lời mời partner",
+     *     description="",
+     *     @OA\RequestBody(
+     *          @OA\JsonContent(),
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  type="object",
+     *                  required={"email", "token", "password", "c_password"},
+     *                  @OA\Property(property="email", type="string", format="string"),
+     *                  @OA\Property(property="token", type="string", format="string"),
+     *                  @OA\Property(property="password", type="string", format="string"),
+     *                  @OA\Property(property="c_password", type="string", format="string")
+     *              )
+     *          ),
+     *     ),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function accessInvite(Request $request) {
         try {
             $validator = Validator::make($request->all(), [
@@ -184,6 +301,27 @@ class PartnerManagementController extends BaseController
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/partner/partner-management/reject-invite",
+     *     tags={"Partner-Management Partner"},
+     *     summary="Hủy lời mời partner",
+     *     description="",
+     *     @OA\RequestBody(
+     *          @OA\JsonContent(),
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  type="object",
+     *                  required={"email", "token"},
+     *                  @OA\Property(property="email", type="string", format="string"),
+     *                  @OA\Property(property="token", type="string", format="string")
+     *              )
+     *          ),
+     *     ),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function rejectInvite(Request $request) {
         try {
             $validator = Validator::make($request->all(), [
@@ -208,6 +346,15 @@ class PartnerManagementController extends BaseController
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/partner/partner-management/list-invite-partner",
+     *     summary="Danh sách lời mời",
+     *     tags={"Partner-Management Partner"},
+     *     security={{"bearer":{}}},
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function listInvitePartner() {
         try {
             [$status, $res, $mess] = $this->partnerManagementService->listInvitePartner();
@@ -223,6 +370,27 @@ class PartnerManagementController extends BaseController
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/partner/partner-management/cancel-invite-partner",
+     *     tags={"Partner-Management Partner"},
+     *     summary="Hủy lời mời partner",
+     *     description="",
+     *     security={{"bearer":{}}},
+     *     @OA\RequestBody(
+     *          @OA\JsonContent(),
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  type="object",
+     *                  required={"partner_invite_ids[]"},
+     *                  @OA\Property(property="partner_invite_ids[]", type="string"),
+     *              )
+     *          ),
+     *     ),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function cancelInvitePartner(Request $request) {
         try {
             $validator = Validator::make($request->all(), [

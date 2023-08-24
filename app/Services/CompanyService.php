@@ -36,13 +36,13 @@ class CompanyService {
             'welfare_ids'
         ]);
         
-        $companyData['name'] = $requestData['name'];
-        $companyData['number_phone'] = $requestData['number_phone'];
-        $companyData['address'] = $requestData['address'];
-        $companyData['size'] = $requestData['size'];
-        $companyData['recipients_of_cv'] = $requestData['recipients_of_cv'];
-        $companyData['info'] = $requestData['info'];
-        $companyData['video'] = $requestData['video'];
+        $companyData['name'] = isset($requestData['name']) ? $requestData['name'] : null;
+        $companyData['number_phone'] = isset($requestData['number_phone']) ? $requestData['number_phone'] : null;
+        $companyData['address'] = isset($requestData['address']) ? $requestData['address'] : null;
+        $companyData['size'] = isset($requestData['size']) ? $requestData['size'] : null;
+        $companyData['recipients_of_cv'] = isset($requestData['recipients_of_cv']) ? $requestData['recipients_of_cv'] : null;
+        $companyData['info'] = isset($requestData['info']) ? $requestData['info'] : null;
+        $companyData['video'] = isset($requestData['video']) ? $requestData['video'] : null;
         $companyData['updated_by'] = Auth::guard('api-user')->user()->id;
 
         if (!empty($request->file('logo'))) {

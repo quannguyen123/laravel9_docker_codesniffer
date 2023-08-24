@@ -21,6 +21,15 @@ class CompanyLocationController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
+    /**
+     * @OA\Get(
+     *     path="/api/partner/company-location/index",
+     *     summary="Danh sách vị trí làm việc",
+     *     tags={"Partner-Location"},
+     *     security={{"bearer":{}}},
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function index(Request $request)
     {
         try {
@@ -43,6 +52,29 @@ class CompanyLocationController extends BaseController
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
+     */
+    /**
+     * @OA\Post(
+     *     path="/api/partner/company-location/store",
+     *     tags={"Partner-Location"},
+     *     summary="Thêm vị trí làm việc",
+     *     description="",
+     *     security={{"bearer":{}}},
+     *     @OA\RequestBody(
+     *          @OA\JsonContent(),
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  type="object",
+     *                  required={"name", "address", "province_id"},
+     *                  @OA\Property(property="name", type="string", format="string"),
+     *                  @OA\Property(property="address", type="string", format="string"),
+     *                  @OA\Property(property="province_id", type="integer", format="int64")
+     *              )
+     *          ),
+     *     ),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
      */
     public function store(Request $request)
     {
@@ -77,6 +109,16 @@ class CompanyLocationController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+     /**
+     * @OA\Get(
+     *     path="/api/partner/company-location/detail/{id}",
+     *     summary="Thông tin chi tiết vị trí làm việc",
+     *     tags={"Partner-Location"},
+     *     security={{"bearer":{}}},
+     *     @OA\Parameter(in="path", name="id", required=true, description="Id vị trí làm việc", @OA\Schema(type="integer")),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function detail($id)
     {
         try {            
@@ -100,6 +142,30 @@ class CompanyLocationController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     */
+    /**
+     * @OA\Post(
+     *     path="/api/partner/company-location/update/{id}",
+     *     tags={"Partner-Location"},
+     *     summary="Sửa vị trí làm việc",
+     *     description="",
+     *     security={{"bearer":{}}},
+     *     @OA\Parameter(in="path", name="id", required=true, description="Id vị trí làm việc", @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *          @OA\JsonContent(),
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  type="object",
+     *                  required={"name", "address", "province_id"},
+     *                  @OA\Property(property="name", type="string", format="string"),
+     *                  @OA\Property(property="address", type="string", format="string"),
+     *                  @OA\Property(property="province_id", type="integer", format="int64")
+     *              )
+     *          ),
+     *     ),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
      */
     public function update(Request $request, $id)
     {
@@ -133,6 +199,17 @@ class CompanyLocationController extends BaseController
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     */
+    /**
+     * @OA\Delete(
+     *     path="/api/partner/company-location/destroy/{id}",
+     *     tags={"Partner-Location"},
+     *     summary="Xóa vị trí làm việc",
+     *     description="",
+     *     security={{"bearer":{}}},
+     *     @OA\Parameter(in="path", name="id", required=true, description="Id vị trí làm việc", @OA\Schema(type="integer")),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
      */
     public function destroy($id)
     {

@@ -164,7 +164,7 @@ class JobService {
             return [false, [], 'Không tìm thấy công việc'];
         }
 
-        return [true, $job, 'Không tìm thấy công việc'];
+        return [true, $job, 'Success'];
     }
 
     public function update(Request $request, $id)
@@ -473,12 +473,14 @@ class JobService {
             return [true, [], 'Job không tồn tại'];
         }
 
-        $userJobView = [
-            'user_id' => Auth::guard('api-user')->user()->id,
-            'job_id' => $id
-        ];
+        if (Auth::guard('api-user')->check()) {
+            $userJobView = [
+                'user_id' => Auth::guard('api-user')->user()->id,
+                'job_id' => $id
+            ];
 
-        JobUserView::insert($userJobView);
+            JobUserView::insert($userJobView);
+        }
 
         return [true, $job, 'Success'];
     }

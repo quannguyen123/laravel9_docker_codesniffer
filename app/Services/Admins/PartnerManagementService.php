@@ -151,6 +151,13 @@ class PartnerManagementService {
 
     public function choosePartnerAdmin($id) {
         $statusCheckRole = $this->checkRole();
+
+        $userId = Auth::guard('api-user')->user()->id;
+ 
+        if ($userId == $id) {
+            return [false, [], 'Không thể cài đặt quyền cho chính mình'];
+        }
+
         if (!$statusCheckRole) {
             return [false, [], 'Tài khoản không có quyền thực hiện yêu cầu'];
         }
@@ -170,6 +177,11 @@ class PartnerManagementService {
         $partner->removeRole('partner_accountant');
 
         $partner->assignRole('partner_admin');
+
+        // Xóa quyền admin của user hiện tại
+        $partnerOldId = Auth::guard('api-user')->user()->id;
+        $partnerOld = User::find($partnerOldId);
+        $partnerOld->removeRole('partner_admin');
 
         return [true, $partner, 'Success'];
     }
@@ -290,7 +302,7 @@ class PartnerManagementService {
     
             // company_user
             $companyUser = [
-                'company_id' => Auth::guard('api-user')->user()->company[0]['id'],
+                'company_id' => $accessInvite['company_id'],
                 'user_id' => $user->id
             ];
             CompanyUser::create($companyUser);
@@ -318,14 +330,10 @@ class PartnerManagementService {
             'email'
         ]);
 
-        $statusCheckRole = $this->checkRole();
-        if (!$statusCheckRole) {
-            return [false, [], 'Tài khoản không có quyền thực hiện yêu cầu'];
-        }
-
         $whereArr = [
             'email' => $requestData['email'],
-            'token' => $requestData['token']        ];
+            'token' => $requestData['token']
+        ];
         $accessInvite = $this->partnerInviteRepository->findWhere($whereArr)->first();
 
         if (empty($accessInvite)) {

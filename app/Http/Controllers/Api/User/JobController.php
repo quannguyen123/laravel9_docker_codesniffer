@@ -15,6 +15,86 @@ class JobController extends BaseController
         $this->jobService = $jobService;
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/job/index",
+     *     summary="Danh sách các job",
+     *     tags={"Job"},
+     *     @OA\Parameter(
+     *          in="query",
+     *          name="occupation_ids[]",
+     *          required=false,
+     *          description="Id ngành nghề",
+     *          @OA\Schema(
+     *            type="string"
+     *          )
+     *     ),
+     *     @OA\Parameter(
+     *          in="query",
+     *          name="location_id",
+     *          required=false,
+     *          description="Id vị trí công việc",
+     *          @OA\Schema(
+     *            type="number"
+     *          )
+     *     ),
+     *     @OA\Parameter(
+     *          in="query",
+     *          name="welfare_ids[]",
+     *          required=false,
+     *          description="Id phúc lợi",
+     *          @OA\Schema(
+     *            type="number"
+     *          )
+     *     ),
+     *     @OA\Parameter(
+     *          in="query",
+     *          name="search",
+     *          required=false,
+     *          description="Id phúc lợi",
+     *          @OA\Schema(
+     *            type="string"
+     *          )
+     *      ),
+     *      @OA\Parameter(
+     *          in="query",
+     *          name="rank",
+     *          required=false,
+     *          description="Vị trí tuyển dụng",
+     *          @OA\Schema(
+     *            type="number"
+     *          )
+     *      ),
+     *      @OA\Parameter(
+     *          in="query",
+     *          name="job_type",
+     *          required=false,
+     *          description="Loại công việc",
+     *          @OA\Schema(
+     *            type="number"
+     *          )
+     *      ),
+     *      @OA\Parameter(
+     *          in="query",
+     *          name="salary_type",
+     *          required=false,
+     *          description="Mức lương",
+     *          @OA\Schema(
+     *            type="number"
+     *          )
+     *      ),
+     *      @OA\Parameter(
+     *          in="query",
+     *          name="urgent",
+     *          required=false,
+     *          description="Công việc gấp",
+     *          @OA\Schema(
+     *            type="number"
+     *          )
+     *      ),
+     *      @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function index(Request $request) {
         try {
             $validator = Validator::make($request->all(), [
@@ -42,6 +122,23 @@ class JobController extends BaseController
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/job/detail/{id}",
+     *     summary="Thông tin chi tiết job",
+     *     tags={"Job"},
+     *     @OA\Parameter(
+     *          in="path",
+     *          name="id",
+     *          required=true,
+     *          description="Order id",
+     *          @OA\Schema(
+     *            type="integer"
+     *          )
+     *     ),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function detail($id) {
         try {
             [$status, $job, $mess] = $this->jobService->jobDetail($id);
@@ -54,6 +151,44 @@ class JobController extends BaseController
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/job/job-apply/{id}",
+     *     summary="Ứng tuyển Job",
+     *     tags={"Job"},
+     *     security={{"bearer":{}}},
+     *     description="User register",
+     *     @OA\SecurityScheme(
+     *          securityScheme="bearerAuth",
+     *          type="http",
+     *          scheme="bearer",
+     *          bearerFormat="JWT"
+     *     ),
+     *     @OA\Parameter(
+     *          in="path",
+     *          name="id",
+     *          required=true,
+     *          description="Order id",
+     *          @OA\Schema(
+     *            type="integer"
+     *          )
+     *     ),
+     *      @OA\RequestBody(
+     *          @OA\JsonContent(),
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  type="object",
+     *                  required={"position", "number_phone", "file_cv"},
+     *                  @OA\Property(property="position", type="string", format="string", example="Nhân viên", description ="Vị trí ứng tuyển"),
+     *                  @OA\Property(property="number_phone", type="string", format="string"),
+     *                  @OA\Property(property="file_cv", type="string", format="binary")
+     *              )
+     *          ),
+     *     ),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function applyJob(Request $request, $id) {
         try {
             // TODO:: send mail cho user và partner khi có job apply

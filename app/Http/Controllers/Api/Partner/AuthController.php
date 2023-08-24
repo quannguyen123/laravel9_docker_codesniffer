@@ -21,6 +21,30 @@ use Illuminate\Support\Str;
 
 class AuthController extends BaseController
 {
+    /**
+     * @OA\Post(
+     *     path="/api/partner/register",
+     *     summary="Đăng ký partner",
+     *     tags={"Partner-Authorization"},
+     *     description="User register",
+     *      @OA\RequestBody(
+     *          @OA\JsonContent(),
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  type="object",
+     *                  required={"email", "password", "c_password", "first_name", "last_name"},
+     *                  @OA\Property(property="email", type="string", format="string"),
+     *                  @OA\Property(property="password", type="string", format="string"),
+     *                  @OA\Property(property="c_password", type="string", format="string"),
+     *                  @OA\Property(property="first_name", type="string", format="string"),
+     *                  @OA\Property(property="last_name", type="string", format="string")
+     *              )
+     *          ),
+     *     ),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function register(Request $request)
     {
         try {
@@ -161,6 +185,27 @@ class AuthController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
+    /**
+     * @OA\Post(
+     *     path="/api/partner/login",
+     *     summary="Partner đăng nhập",
+     *     tags={"Partner-Authorization"},
+     *     description="User login",
+     *      @OA\RequestBody(
+     *          @OA\JsonContent(),
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  type="object",
+     *                  required={"email", "password"},
+     *                  @OA\Property(property="email", type="string", format="string", example="vaj08543@nezid.com"),
+     *                  @OA\Property(property="password", type="string", format="string", example="12345678")
+     *              )
+     *          ),
+     *     ),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function login(Request $request)
     {
         try {
@@ -202,6 +247,54 @@ class AuthController extends BaseController
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/user/reset-password",
+     *     tags={"User-Authorization"},
+     *     summary="Gửi link quên password",
+     *     description="",
+     *     operationId="updatePetWithForm",
+     *     @OA\RequestBody(
+     *         required=false,
+     *         @OA\MediaType(
+     *             mediaType="application/x-www-form-urlencoded",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="email",
+     *                     description="Email của user",
+     *                     type="string"
+     *                 ),
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
+    /**
+     * @OA\Post(
+     *     path="/api/partner/reset-password",
+     *     tags={"Partner-Authorization"},
+     *     summary="Gửi link quên password",
+     *     description="",
+     *     operationId="updatePetWithForm",
+     *     @OA\RequestBody(
+     *         required=false,
+     *         @OA\MediaType(
+     *             mediaType="application/x-www-form-urlencoded",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="email",
+     *                     description="Email của user",
+     *                     type="string"
+     *                 ),
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function resetPassword(Request $request) {
         try {
             $validator = Validator::make($request->all(), [
@@ -239,6 +332,54 @@ class AuthController extends BaseController
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/user/create-new-password",
+     *     tags={"User-Authorization"},
+     *     summary="Tạo password mới",
+     *     description="",
+     *     operationId="createNewPassword",
+     *     @OA\RequestBody(
+     *         required=false,
+     *         @OA\MediaType(
+     *             mediaType="application/x-www-form-urlencoded",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 required={"email", "password", "c_password", "token"},
+     *                 @OA\Property(property="email", type="string", format="string"),
+     *                 @OA\Property(property="password", type="string", format="string"),
+     *                 @OA\Property(property="c_password", type="string", format="string"),
+     *                 @OA\Property(property="token", type="string", format="string")
+     *             )
+     *         )
+     *     ),
+     * )
+     */
+
+     /**
+     * @OA\Post(
+     *     path="/api/partner/create-new-password",
+     *     tags={"Partner-Authorization"},
+     *     summary="Tạo password mới",
+     *     description="",
+     *     operationId="createNewPassword",
+     *     @OA\RequestBody(
+     *         required=false,
+     *         @OA\MediaType(
+     *             mediaType="application/x-www-form-urlencoded",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 required={"email", "password", "c_password", "token"},
+     *                 @OA\Property(property="email", type="string", format="string"),
+     *                 @OA\Property(property="password", type="string", format="string"),
+     *                 @OA\Property(property="c_password", type="string", format="string"),
+     *                 @OA\Property(property="token", type="string", format="string")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function createNewPassword(Request $request) {
         try {
             $validator = Validator::make($request->all(), [
@@ -280,6 +421,55 @@ class AuthController extends BaseController
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/user/change-password",
+     *     tags={"User-Authorization"},
+     *     security={{"bearer":{}}},
+     *     summary="Thay đổi password",
+     *     description="",
+     *     operationId="changePassword",
+     *     @OA\RequestBody(
+     *         required=false,
+     *         @OA\MediaType(
+     *             mediaType="application/x-www-form-urlencoded",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 required={"old_password", "password", "c_password"},
+     *                 @OA\Property(property="old_password", type="string", format="string"),
+     *                 @OA\Property(property="password", type="string", format="string"),
+     *                 @OA\Property(property="c_password", type="string", format="string")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
+
+     /**
+     * @OA\Post(
+     *     path="/api/partner/change-password",
+     *     tags={"Partner-Authorization"},
+     *     security={{"bearer":{}}},
+     *     summary="Thay đổi password",
+     *     description="",
+     *     operationId="changePassword",
+     *     @OA\RequestBody(
+     *         required=false,
+     *         @OA\MediaType(
+     *             mediaType="application/x-www-form-urlencoded",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 required={"old_password", "password", "c_password"},
+     *                 @OA\Property(property="old_password", type="string", format="string"),
+     *                 @OA\Property(property="password", type="string", format="string"),
+     *                 @OA\Property(property="c_password", type="string", format="string")
+     *             )
+     *         )
+     *     ),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function changePassword(Request $request) {
         try {
             $validator = Validator::make($request->all(), [

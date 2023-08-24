@@ -74,7 +74,7 @@ Route::group( ['prefix' => 'partner', 'middleware' => ['auth:api-user', 'role:pa
     });
 
     Route::prefix('service')->group(function() {
-        Route::get('list', [ServiceController::class, 'list']);
+        Route::get('index', [ServiceController::class, 'list']);
         Route::get('detail/{serviceId}', [ServiceController::class, 'detail']);
 
         Route::post('add-to-cart', [ServiceController::class, 'addToCart']);
@@ -88,7 +88,7 @@ Route::group( ['prefix' => 'partner', 'middleware' => ['auth:api-user', 'role:pa
     Route::prefix('order')->group(function() {
         Route::get('index', [OrderController::class, 'index']);
         Route::get('store', [OrderController::class, 'store']);
-        Route::get('{id}/order-info', [OrderController::class, 'orderInfo']);
+        Route::get('detail/{id}', [OrderController::class, 'orderInfo']);
     });
 
     Route::prefix('payment')->group(function() {
@@ -103,6 +103,6 @@ Route::group( ['prefix' => 'partner', 'middleware' => ['auth:api-user', 'role:pa
         Route::get('detail/{id}', [JobController::class, 'detail']);
         Route::post('update/{id}', [JobController::class, 'update']);
         Route::get('destroy/{id}', [JobController::class, 'destroy']);
-        Route::get('change-status/{id}',  [JobController::class, 'changeStatus']);
+        Route::get('change-status/{id}/{status}',  [JobController::class, 'changeStatus'])->whereIn('status', array_keys(config('custom.job-status')));
     });
 });

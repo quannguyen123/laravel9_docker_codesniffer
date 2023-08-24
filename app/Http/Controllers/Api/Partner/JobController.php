@@ -102,6 +102,18 @@ class JobController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
+    /**
+     * @OA\Get(
+     *     path="/api/partner/job/index",
+     *     summary="Danh sách job",
+     *     tags={"Partner-Job"},
+     *     security={{"bearer":{}}},
+     *     @OA\Parameter(in="query", name="status", required=true, description="Id vị trí làm việc", @OA\Schema(type="string")),
+     *     @OA\Parameter(in="query", name="filters[occupation]", required=false, description="Id vị trí làm việc", @OA\Schema(type="integer")),
+     *     @OA\Parameter(in="query", name="filters[location]", required=false, description="Id vị trí làm việc", @OA\Schema(type="integer")),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function index(Request $request)
     {
         try {
@@ -143,6 +155,45 @@ class JobController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    
+    /**
+     * @OA\Post(
+     *     path="/api/partner/job/store",
+     *     tags={"Partner-Job"},
+     *     summary="Đăng tin tuyển dụng",
+     *     description="",
+     *     security={{"bearer":{}}},
+     *     @OA\RequestBody(
+     *          @OA\JsonContent(),
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  type="object",
+     *                  required={"job_title", "rank", "description", "job_require", "salary_min", "salary_max", "recipients_of_cv", "email_recipients_of_cv", "tag_ids[]", "occupation_ids[]", "company_location_ids[]"},
+     *                  @OA\Property(property="job_title", type="string ", format="string"),
+     *                  @OA\Property(property="rank", type="integer", format="int"),
+     *                  @OA\Property(property="job_type", type="integer", format="int"),
+     *                  @OA\Property(property="description", type="string", format="string"),
+     *                  @OA\Property(property="job_require", type="string", format="string"),
+     *                  @OA\Property(property="salary_min", type="integer", format="int"),
+     *                  @OA\Property(property="salary_max", type="integer", format="int"),
+     *                  @OA\Property(property="show_salary", type="integer", format="int"),
+     *                  @OA\Property(property="introducing_letter", type="integer", format="int"),
+     *                  @OA\Property(property="language_cv", type="integer", format="int"),
+     *                  @OA\Property(property="recipients_of_cv", type="string ", format="string"),
+     *                  @OA\Property(property="show_recipients_of_cv", type="integer", format="int"),
+     *                  @OA\Property(property="email_recipients_of_cv", type="string", format="string"),
+     *                  @OA\Property(property="post_anonymously", type="integer", format="int"),
+     *                  @OA\Property(property="tag_ids[]", type="integer", format="int64"),
+     *                  @OA\Property(property="occupation_ids[]", type="integer", format="int64"),
+     *                  @OA\Property(property="company_location_ids[]", type="integer", format="int64"),
+     *                  @OA\Property(property="is_draft", type="integer", format="int")
+     *              )
+     *          ),
+     *     ),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function store(Request $request)
     {
         try {
@@ -161,14 +212,13 @@ class JobController extends BaseController
                 'show_recipients_of_cv' => 'nullable|boolean',
                 'email_recipients_of_cv' => 'email|required',
                 'post_anonymously' => 'nullable|boolean',
-
                 'tag_ids' => 'required|array',
                 'tag_ids.*' => 'numeric|exists:tags,id',
                 'occupation_ids' => 'required|array',
                 'occupation_ids.*' => 'numeric|exists:occupations,id',
                 'company_location_ids' => 'required|array',
                 'company_location_ids.*' => 'numeric|exists:company_location,id',
-                'is_draft' => 'nullable|boolean'
+                'is_draft' => 'nullable|boolean',
             ]);
     
             if($validator->fails()){
@@ -188,6 +238,16 @@ class JobController extends BaseController
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     */
+    /**
+     * @OA\Get(
+     *     path="/api/partner/job/detail/{id}",
+     *     summary="Thông tin chi tiết job",
+     *     tags={"Partner-Job"},
+     *     security={{"bearer":{}}},
+     *     @OA\Parameter(in="path", name="id", required=true, description="Id job", @OA\Schema(type="integer")),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
      */
     public function detail($id)
     {
@@ -210,6 +270,45 @@ class JobController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     */
+    /**
+     * @OA\Post(
+     *     path="/api/partner/job/update/{id}",
+     *     tags={"Partner-Job"},
+     *     summary="Cập nhật thông tin tuyển dụng",
+     *     description="",
+     *     security={{"bearer":{}}},
+     *     @OA\Parameter(in="path", name="id", required=true, description="Id job", @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *          @OA\JsonContent(),
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  type="object",
+     *                  required={"job_title", "rank", "description", "job_require", "salary_min", "salary_max", "recipients_of_cv", "email_recipients_of_cv", "tag_ids[]", "occupation_ids[]", "company_location_ids[]"},
+     *                  @OA\Property(property="job_title", type="string ", format="string"),
+     *                  @OA\Property(property="rank", type="integer", format="int"),
+     *                  @OA\Property(property="job_type", type="integer", format="int"),
+     *                  @OA\Property(property="description", type="string", format="string"),
+     *                  @OA\Property(property="job_require", type="string", format="string"),
+     *                  @OA\Property(property="salary_min", type="integer", format="int"),
+     *                  @OA\Property(property="salary_max", type="integer", format="int"),
+     *                  @OA\Property(property="show_salary", type="integer", format="int"),
+     *                  @OA\Property(property="introducing_letter", type="integer", format="int"),
+     *                  @OA\Property(property="language_cv", type="integer", format="int"),
+     *                  @OA\Property(property="recipients_of_cv", type="string ", format="string"),
+     *                  @OA\Property(property="show_recipients_of_cv", type="integer", format="int"),
+     *                  @OA\Property(property="email_recipients_of_cv", type="string", format="string"),
+     *                  @OA\Property(property="post_anonymously", type="integer", format="int"),
+     *                  @OA\Property(property="tag_ids[]", type="integer", format="int64"),
+     *                  @OA\Property(property="occupation_ids[]", type="integer", format="int64"),
+     *                  @OA\Property(property="company_location_ids[]", type="integer", format="int64"),
+     *                  @OA\Property(property="is_draft", type="integer", format="int")
+     *              )
+     *          ),
+     *     ),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
      */
     public function update(Request $request, $id)
     {
@@ -260,6 +359,16 @@ class JobController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    /**
+     * @OA\Get(
+     *     path="/api/partner/job/destroy/{id}",
+     *     summary="Xóa job",
+     *     tags={"Partner-Job"},
+     *     security={{"bearer":{}}},
+     *     @OA\Parameter(in="path", name="id", required=true, description="Id job", @OA\Schema(type="integer")),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function destroy($id)
     {
         try {
@@ -275,17 +384,19 @@ class JobController extends BaseController
         }
     }
 
-    public function changeStatus(Request $request, $id) {
+    /**
+     * @OA\Get(
+     *     path="/api/partner/job/change-status/{id}/{status}",
+     *     summary="Thay đổi trạng thái của job",
+     *     tags={"Partner-Job"},
+     *     security={{"bearer":{}}},
+     *     @OA\Parameter(in="path", name="id", required=true, description="Id job", @OA\Schema(type="integer")),
+     *     @OA\Parameter(in="path", name="status", required=true, description="draft, public, hidden, about_to_expire, expired, virtual", @OA\Schema(type="string")),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
+    public function changeStatus($id, $status) {
         try {
-            $validator = Validator::make($request->all(), [
-                'status' => 'required'
-            ]);
-    
-            if($validator->fails()){
-                return $this->sendError('Validation Error.', $validator->errors());
-            }
-
-            $status = $request['status'];
             if (!in_array($status, array_keys(config('custom.job-status')))) {
                 return $this->sendError('Status không đúng');
             }

@@ -199,6 +199,7 @@ return [
         Spatie\Permission\PermissionServiceProvider::class,
 
         Laravel\Passport\PassportServiceProvider::class,
+        L5Swagger\L5SwaggerServiceProvider::class,
 
         // Maatwebsite\Excel\ExcelServiceProvider::class,
     ],

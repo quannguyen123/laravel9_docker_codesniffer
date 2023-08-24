@@ -11,6 +11,31 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends BaseController
 {
+    /**
+     * @OA\Post(
+     *     path="/api/user/register",
+     *     summary="Đăng ký user",
+     *     tags={"User-Authorization"},
+     *     description="User register",
+     *      @OA\RequestBody(
+     *          @OA\JsonContent(),
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  type="object",
+     *                  required={"email", "password", "c_password", "first_name", "last_name"},
+     *                  @OA\Property(property="email", type="string", format="string"),
+     *                  @OA\Property(property="password", type="string", format="string"),
+     *                  @OA\Property(property="c_password", type="string", format="string"),
+     *                  @OA\Property(property="first_name", type="string", format="string"),
+     *                  @OA\Property(property="last_name", type="string", format="string")
+     *              )
+     *          ),
+     *     ),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
+
     public function register(Request $request)
     {
         try {
@@ -52,6 +77,28 @@ class AuthController extends BaseController
      * Login api
      *
      * @return \Illuminate\Http\Response
+     */
+
+     /**
+     * @OA\Post(
+     *     path="/api/user/login",
+     *     summary="User đăng nhập",
+     *     tags={"User-Authorization"},
+     *     description="User login",
+     *      @OA\RequestBody(
+     *          @OA\JsonContent(),
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  type="object",
+     *                  required={"email", "password"},
+     *                  @OA\Property(property="email", type="string", format="string", example="quanquanuser@gmail.com"),
+     *                  @OA\Property(property="password", type="string", format="string", example="12345678")
+     *              )
+     *          ),
+     *     ),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
      */
     public function login(Request $request)
     {
