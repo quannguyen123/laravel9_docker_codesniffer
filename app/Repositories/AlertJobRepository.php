@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Prettus\Repository\Contracts\RepositoryInterface;
 
 /**
@@ -11,5 +12,5 @@ use Prettus\Repository\Contracts\RepositoryInterface;
  */
 interface AlertJobRepository extends RepositoryInterface
 {
-    //
+    public function search(array $filter): LengthAwarePaginator;
 }

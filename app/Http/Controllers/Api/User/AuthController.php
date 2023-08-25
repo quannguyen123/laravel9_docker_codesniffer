@@ -127,6 +127,16 @@ class AuthController extends BaseController
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/user/logout",
+     *     tags={"User-Authorization"},
+     *     summary="Đăng xuất User",
+     *     description="",
+     *     security={{"bearer":{}}},
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function logout() {
         try {
             Auth::user()->tokens->each(function($token, $key) {

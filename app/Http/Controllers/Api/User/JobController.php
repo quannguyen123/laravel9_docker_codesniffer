@@ -19,7 +19,7 @@ class JobController extends BaseController
      * @OA\Get(
      *     path="/api/job/index",
      *     summary="Danh sách các job",
-     *     tags={"Job"},
+     *     tags={"User-Job"},
      *     @OA\Parameter(
      *          in="query",
      *          name="occupation_ids[]",
@@ -126,7 +126,7 @@ class JobController extends BaseController
      * @OA\Get(
      *     path="/api/job/detail/{id}",
      *     summary="Thông tin chi tiết job",
-     *     tags={"Job"},
+     *     tags={"User-Job"},
      *     @OA\Parameter(
      *          in="path",
      *          name="id",
@@ -155,25 +155,11 @@ class JobController extends BaseController
      * @OA\Post(
      *     path="/api/job/job-apply/{id}",
      *     summary="Ứng tuyển Job",
-     *     tags={"Job"},
+     *     tags={"User-Job"},
      *     security={{"bearer":{}}},
-     *     description="User register",
-     *     @OA\SecurityScheme(
-     *          securityScheme="bearerAuth",
-     *          type="http",
-     *          scheme="bearer",
-     *          bearerFormat="JWT"
-     *     ),
-     *     @OA\Parameter(
-     *          in="path",
-     *          name="id",
-     *          required=true,
-     *          description="Order id",
-     *          @OA\Schema(
-     *            type="integer"
-     *          )
-     *     ),
-     *      @OA\RequestBody(
+     *     description="Nộp CV",
+     *     @OA\Parameter(in="path", name="id", required=true, description="Id công việc", @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
      *          @OA\JsonContent(),
      *          @OA\MediaType(
      *              mediaType="multipart/form-data",
@@ -212,6 +198,17 @@ class JobController extends BaseController
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/job/job-favourite/{id}",
+     *     summary="Job yêu thích",
+     *     tags={"User-Job"},
+     *     security={{"bearer":{}}},
+     *     description="User register",
+     *     @OA\Parameter(in="path", name="id", required=true, description="Id công việc", @OA\Schema(type="integer")),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function jobFavourite($id) {
         try {
             [$status, $job, $mess] = $this->jobService->jobFavourite($id);

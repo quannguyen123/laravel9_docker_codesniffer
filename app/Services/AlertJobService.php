@@ -28,7 +28,7 @@ class AlertJobService {
      */
     public function index($request)
     {
-        $alertJob = AlertJob::where('user_id', Auth::guard('api-user')->user()->id)->get();
+        $alertJob = AlertJob::where('user_id', Auth::guard('api-user')->user()->id)->orderBy('id', 'DESC')->get();
         $alertJob = $this->convertData($alertJob);
 
         return [true, $alertJob, 'Success'];
@@ -112,15 +112,15 @@ class AlertJobService {
             return [false, [], 'Thông báo việc làm không tồn tại'];
         }
 
-        $alertJob['position'] = $requestData['position'];
-        $alertJob['salary_min'] = $requestData['salary_min'];
-        $alertJob['rank'] = $requestData['rank'];
-        $alertJob['province'] = $requestData['province'];
-        $alertJob['occupation'] = $requestData['occupation'];
-        $alertJob['industry'] = $requestData['industry'];
-        $alertJob['interval'] = $requestData['interval'];
-        $alertJob['notification_by'] = $requestData['notification_by'];
-        $alertJob['status'] = $requestData['status'];
+        $alertJob['position'] = isset($requestData['position']) ? $requestData['position'] : null;
+        $alertJob['salary_min'] = isset($requestData['salary_min']) ? $requestData['salary_min'] : null;
+        $alertJob['rank'] = isset($requestData['rank']) ? $requestData['rank'] : null;
+        $alertJob['province'] = isset($requestData['province']) ? $requestData['province'] : null;
+        $alertJob['occupation'] = isset($requestData['occupation']) ? $requestData['occupation'] : null;
+        $alertJob['industry'] = isset($requestData['industry']) ? $requestData['industry'] : null;
+        $alertJob['interval'] = isset($requestData['interval']) ? $requestData['interval'] : null;
+        $alertJob['notification_by'] = isset($requestData['notification_by']) ? $requestData['notification_by'] : null;
+        $alertJob['status'] = isset($requestData['status']) ? $requestData['status'] : null;
 
         $alertJob->save();
 
@@ -193,20 +193,26 @@ class AlertJobService {
 
         foreach ($alertJob as $key => $alertJobItem) {
             $provinceData = [];
-            foreach ($alertJobItem['province'] as $item) {
-                $provinceData[] = $provinceArr[$item];
+            if (!empty($provinceArr)) {
+                foreach ($alertJobItem['province'] as $item) {
+                    $provinceData[] = $provinceArr[$item];
+                }
             }
             $alertJobItem['provinceData'] = $provinceData;
 
             $occupationData = [];
-            foreach ($alertJobItem['occupation'] as $item) {
-                $occupationData[] = $occupationArr[$item];
+            if (!empty($occupationArr)) {
+                foreach ($alertJobItem['occupation'] as $item) {
+                    $occupationData[] = $occupationArr[$item];
+                }
             }
             $alertJobItem['occupationData'] = $occupationData;
 
             $industryData = [];
-            foreach ($alertJobItem['industry'] as $item) {
-                $industryData[] = $industryArr[$item];
+            if (!empty($industryArr)) {
+                foreach ($alertJobItem['industry'] as $item) {
+                    $industryData[] = $industryArr[$item];
+                }
             }
             $alertJobItem['industryData'] = $industryData;
         }
