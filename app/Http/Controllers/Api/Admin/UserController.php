@@ -21,6 +21,18 @@ class UserController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
+    /**
+     * @OA\Get(
+     *     path="/api/admin/user/index",
+     *     summary="Danh sách người dùng",
+     *     tags={"Admin-Managerment User"},
+     *     security={{"bearer":{}}},
+     *     @OA\Parameter(in="query", name="search", required=false, description="Tên user", @OA\Schema(type="string")),
+     *     @OA\Parameter(in="query", name="orderBy", required=false, description="Cột sắp xếp", @OA\Schema(type="string")),
+     *     @OA\Parameter(in="query", name="orderType", required=false, description="Loại sắp xếp: DESC or ASC", @OA\Schema(type="string")),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function index(Request $request)
     {
         try {
@@ -39,6 +51,16 @@ class UserController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
+    /**
+     * @OA\Get(
+     *     path="/api/admin/user/detail/{id}",
+     *     summary="Thông tin chi tiết người dùng",
+     *     tags={"Admin-Managerment User"},
+     *     security={{"bearer":{}}},
+     *     @OA\Parameter(in="path", name="id", required=true, description="Id người dùng", @OA\Schema(type="integer")),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function detail($id)
     {
         try {
@@ -54,6 +76,17 @@ class UserController extends BaseController
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/admin/user/change-status/{id}/{status}",
+     *     summary="Thay đổi trạng thái người dùng",
+     *     tags={"Admin-Managerment User"},
+     *     security={{"bearer":{}}},
+     *     @OA\Parameter(in="path", name="id", required=true, description="Id người dùng", @OA\Schema(type="integer")),
+     *     @OA\Parameter(in="path", name="status", required=true, description="trạng thái người dùng: lock or active", @OA\Schema(type="string")),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function changeStatus($id, $status) {
         try {
             if (!in_array($status, array_keys(config('custom.status')))) {
@@ -76,6 +109,16 @@ class UserController extends BaseController
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     */
+    /**
+     * @OA\Delete(
+     *     path="/api/admin/user/destroy/{id}",
+     *     summary="Xóa người dùng",
+     *     tags={"Admin-Managerment User"},
+     *     security={{"bearer":{}}},
+     *     @OA\Parameter(in="path", name="id", required=true, description="Id người dùng", @OA\Schema(type="integer")),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
      */
     public function destroy($id)
     {

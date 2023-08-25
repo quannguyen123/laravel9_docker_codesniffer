@@ -21,6 +21,18 @@ class WelfareController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
+    /**
+     * @OA\Get(
+     *     path="/api/admin/welfare/index",
+     *     summary="Danh sách phúc lợi",
+     *     tags={"Admin-Welfare"},
+     *     security={{"bearer":{}}},
+     *     @OA\Parameter(in="query", name="search", required=false, description="Id phúc lợi", @OA\Schema(type="string")),
+     *     @OA\Parameter(in="query", name="orderBy", required=false, description="Cột sắp xếp", @OA\Schema(type="string")),
+     *     @OA\Parameter(in="query", name="orderType", required=false, description="Loại sắp xếp: DESC or ASC", @OA\Schema(type="string")),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function index(Request $request)
     {
         try {
@@ -39,6 +51,28 @@ class WelfareController extends BaseController
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
+     */
+    /**
+     * @OA\Post(
+     *     path="/api/admin/welfare/store",
+     *     tags={"Admin-Welfare"},
+     *     summary="Thêm phúc lợi",
+     *     description="",
+     *     security={{"bearer":{}}},
+     *     @OA\RequestBody(
+     *          @OA\JsonContent(),
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  type="object",
+     *                  required={"name"},
+     *                  @OA\Property(property="name", type="string", format="string"),
+     *                  @OA\Property(property="icon", type="string", format="binary")
+     *              )
+     *          ),
+     *     ),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
      */
     public function store(Request $request)
     {
@@ -66,6 +100,16 @@ class WelfareController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    /**
+     * @OA\Get(
+     *     path="/api/admin/welfare/detail/{welfare}",
+     *     summary="Thông tin chi tiết phúc lợi",
+     *     tags={"Admin-Welfare"},
+     *     security={{"bearer":{}}},
+     *     @OA\Parameter(in="path", name="welfare", required=true, description="Id phúc lợi", @OA\Schema(type="integer")),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function detail(Welfare $welfare)
     {
         try {            
@@ -83,6 +127,29 @@ class WelfareController extends BaseController
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     */
+    /**
+     * @OA\Post(
+     *     path="/api/admin/welfare/update/{welfare}",
+     *     tags={"Admin-Welfare"},
+     *     summary="Sửa phúc lợi",
+     *     description="",
+     *     security={{"bearer":{}}},
+     *     @OA\Parameter(in="path", name="welfare", required=true, description="Id phúc lợi", @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *          @OA\JsonContent(),
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  type="object",
+     *                  required={"name"},
+     *                  @OA\Property(property="name", type="string", format="string"),
+     *                  @OA\Property(property="icon", type="string", format="binary")
+     *              )
+     *          ),
+     *     ),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
      */
     public function update(Request $request, Welfare $welfare)
     {
@@ -108,6 +175,17 @@ class WelfareController extends BaseController
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/admin/welfare/change-status/{welfare}/{status}",
+     *     summary="Thay đổi trạng thái phúc lợi",
+     *     tags={"Admin-Welfare"},
+     *     security={{"bearer":{}}},
+     *     @OA\Parameter(in="path", name="welfare", required=true, description="Id phúc lợi", @OA\Schema(type="integer")),
+     *     @OA\Parameter(in="path", name="status", required=true, description="trạng thái loại công việc: lock or active", @OA\Schema(type="string")),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function changeStatus(Welfare $welfare, $status) {
         try {
             if (!in_array($status, array_keys(config('custom.status')))) {
@@ -131,6 +209,16 @@ class WelfareController extends BaseController
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
+     */
+    /**
+     * @OA\Delete(
+     *     path="/api/admin/welfare/destroy/{welfare}",
+     *     summary="Xóa phúc lợi",
+     *     tags={"Admin-Welfare"},
+     *     security={{"bearer":{}}},
+     *     @OA\Parameter(in="path", name="welfare", required=true, description="Id phúc lợi", @OA\Schema(type="integer")),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
      */
     public function destroy(Welfare $welfare)
     {

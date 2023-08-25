@@ -135,14 +135,14 @@ class ServiceService {
         }
 
         $service = [
-            'name' => $requestData['name'],
-            'type' => $requestData['type'],
-            'price' => $requestData['price'],
-            'used_time' => $requestData['used_time'],
-            'description' => $requestData['description'],
-            'content' => $requestData['content'],
+            'name' => isset($requestData['name']) ? $requestData['name'] : null,
+            'type' => isset($requestData['type']) ? $requestData['type'] : null,
+            'price' => isset($requestData['price']) ? $requestData['price'] : null,
+            'used_time' => isset($requestData['used_time']) ? $requestData['used_time'] : null,
+            'description' => isset($requestData['description']) ? $requestData['description'] : null,
+            'content' => isset($requestData['content']) ? $requestData['content'] : null,
             'image' => $image_name,
-            'note' => $requestData['note'],
+            'note' => isset($requestData['note']) ? $requestData['note'] : null,
             'status' => config('custom.status.active'),
             'created_by' => Auth::guard('api-admin')->user()->id
         ];
@@ -180,13 +180,13 @@ class ServiceService {
             'note'
         ]);
         
-        $service['name'] = $requestData['name'];
-        $service['type'] = $requestData['type'];
-        $service['price'] = $requestData['price'];
-        $service['used_time'] = $requestData['used_time'];
-        $service['description'] = $requestData['description'];
-        $service['content'] = $requestData['content'];
-        $service['note'] = $requestData['note'];
+        $service['name'] = isset($requestData['name']) ? $requestData['name'] : null;
+        $service['type'] = isset($requestData['type']) ? $requestData['type'] : null;
+        $service['price'] = isset($requestData['price']) ? $requestData['price'] : null;
+        $service['used_time'] = isset($requestData['used_time']) ? $requestData['used_time'] : null;
+        $service['description'] = isset($requestData['description']) ? $requestData['description'] : null;
+        $service['content'] = isset($requestData['content']) ? $requestData['content'] : null;
+        $service['note'] = isset($requestData['note']) ? $requestData['note'] : null;
         $service['updated_by'] = Auth::guard('api-admin')->user()->id;
 
         if (!empty($request->file('image'))) {

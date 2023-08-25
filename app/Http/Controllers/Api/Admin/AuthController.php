@@ -12,6 +12,29 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends BaseController
 {
+    /**
+     * @OA\Post(
+     *     path="/api/admin/register",
+     *     tags={"Admin-Authorization"},
+     *     summary="Đăng ký Admin",
+     *     description="",
+     *     @OA\RequestBody(
+     *          @OA\JsonContent(),
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  type="object",
+     *                  required={"name", "email", "password", "c_password"},
+     *                  @OA\Property(property="name", type="string", format="string"),
+     *                  @OA\Property(property="email", type="string", format="string"),
+     *                  @OA\Property(property="password", type="string", format="string"),
+     *                  @OA\Property(property="c_password", type="string", format="string")
+     *              )
+     *          ),
+     *     ),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function register(Request $request)
     {
         try {
@@ -49,9 +72,39 @@ class AuthController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
+    /**
+     * @OA\Post(
+     *     path="/api/admin/login",
+     *     tags={"Admin-Authorization"},
+     *     summary="Đăng nhập Admin",
+     *     description="",
+     *     @OA\RequestBody(
+     *          @OA\JsonContent(),
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  type="object",
+     *                  required={"email", "password"},
+     *                  @OA\Property(property="email", type="string", format="string"),
+     *                  @OA\Property(property="password", type="string", format="string")
+     *              )
+     *          ),
+     *     ),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function login(Request $request)
     {
         try {
+            $validator = Validator::make($request->all(), [
+                'email' => 'required|email',
+                'password' => 'required',
+            ]);
+            
+            if ($validator->fails()) {
+                return $this->sendError('Validation Error.', $validator->errors());
+            }
+
             if((Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password]))){
                 $adminId = Auth::guard('admin')->user()->id;
                 $admin = Admin::find($adminId);
@@ -69,6 +122,16 @@ class AuthController extends BaseController
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/admin/logout",
+     *     tags={"Admin-Authorization"},
+     *     summary="Đăng xuất Admin",
+     *     description="",
+     *     security={{"bearer":{}}},
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function logout() {
         try {
             $success = [];

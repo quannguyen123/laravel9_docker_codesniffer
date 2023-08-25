@@ -16,6 +16,18 @@ class TagController extends BaseController
         $this->tagService = $tagService;
     }
     
+    /**
+     * @OA\Get(
+     *     path="/api/admin/tag/index",
+     *     summary="Danh sách từ khóa",
+     *     tags={"Admin-Tag"},
+     *     security={{"bearer":{}}},
+     *     @OA\Parameter(in="query", name="search", required=false, description="Từ khóa cần search", @OA\Schema(type="string")),
+     *     @OA\Parameter(in="query", name="orderBy", required=false, description="Cột sắp xếp", @OA\Schema(type="string")),
+     *     @OA\Parameter(in="query", name="orderType", required=false, description="Loại sắp xếp: DESC or ASC", @OA\Schema(type="string")),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function index(Request $request)
     {
         try {
@@ -29,6 +41,29 @@ class TagController extends BaseController
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/admin/tag/store",
+     *     tags={"Admin-Tag"},
+     *     summary="Thêm từ khóa",
+     *     description="",
+     *     security={{"bearer":{}}},
+     *     @OA\RequestBody(
+     *          @OA\JsonContent(),
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  type="object",
+     *                  required={"name"},
+     *                  @OA\Property(property="name", type="string", format="string"),
+     *                  @OA\Property(property="occupation_ids[]", type="string", format="string"),
+     *                  @OA\Property(property="job_title_ids[]", type="string", format="string")
+     *              )
+     *          ),
+     *     ),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function store(Request $request)
     {
         try {
@@ -50,6 +85,16 @@ class TagController extends BaseController
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/admin/tag/detail/{tag}",
+     *     summary="Thông tin chi tiết từ khóa",
+     *     tags={"Admin-Tag"},
+     *     security={{"bearer":{}}},
+     *     @OA\Parameter(in="path", name="tag", required=true, description="Id từ khóa", @OA\Schema(type="integer")),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function detail(Tag $tag)
     {
         try {            
@@ -61,6 +106,30 @@ class TagController extends BaseController
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/admin/tag/update/{tag}",
+     *     tags={"Admin-Tag"},
+     *     summary="Sửa từ khóa",
+     *     description="",
+     *     security={{"bearer":{}}},
+     *     @OA\Parameter(in="path", name="tag", required=true, description="Id từ khóa", @OA\Schema(type="integer")),
+     *     @OA\RequestBody(
+     *          @OA\JsonContent(),
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  type="object",
+     *                  required={"name"},
+     *                  @OA\Property(property="name", type="string", format="string"),
+     *                  @OA\Property(property="occupation_ids[]", type="string", format="string"),
+     *                  @OA\Property(property="job_title_ids[]", type="string", format="string")
+     *              )
+     *          ),
+     *     ),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function update(Request $request, Tag $tag)
     {
         try {
@@ -86,6 +155,17 @@ class TagController extends BaseController
         }
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/admin/tag/change-status/{tag}/{status}",
+     *     summary="Thay đổi trạng thái từ khóa",
+     *     tags={"Admin-Tag"},
+     *     security={{"bearer":{}}},
+     *     @OA\Parameter(in="path", name="tag", required=true, description="Id từ khóa", @OA\Schema(type="integer")),
+     *     @OA\Parameter(in="path", name="status", required=true, description="trạng thái từ khóa: lock or active", @OA\Schema(type="string")),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function changeStatus(Tag $tag, $status) {
         try {
             if (!in_array($status, array_keys(config('custom.status')))) {
@@ -104,6 +184,16 @@ class TagController extends BaseController
         }
     }
 
+    /**
+     * @OA\Delete(
+     *     path="/api/admin/tag/destroy/{tag}",
+     *     summary="Xóa từ khóa",
+     *     tags={"Admin-Tag"},
+     *     security={{"bearer":{}}},
+     *     @OA\Parameter(in="path", name="tag", required=true, description="Id từ khóa", @OA\Schema(type="integer")),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function destroy(Tag $tag)
     {
         try {

@@ -108,6 +108,6 @@ class WelfareService {
         $welfare['deleted_at'] = date("Y-m-d H:i:s", time());
         $welfare->save();
 
-        return [true, $welfare, 'Success'];
+        return [true, [], 'Success'];
     }
 }
