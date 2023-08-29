@@ -6,6 +6,7 @@ use App\Models\TagSuggest;
 use App\Repositories\TagRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class TagService {
     /**
@@ -60,11 +61,15 @@ class TagService {
     public function getTagSuggest($request) {
         $requestData = $request->only(['occupation_id', 'job_title_id']);
 
-        $tagId = TagSuggest::where('occupation_id', $requestData['occupation_id'])->where('job_title_id', $requestData['job_title_id'])->fluck('tag_id');
+        $tags = TagSuggest::where('occupation_id', $requestData['occupation_id'])->where('job_title_id', $requestData['job_title_id'])->select('tag_id')->get()->toArray();
 
-        $tags = $this->repository->select('name', 'count_job', 'status')->findWhereIn('id', $tagId);
+        $tagId = array_map(function($item) {
+            return $item['tag_id'];
+        }, $tags);
 
-        return $tags;
+        $tagArr = $this->repository->select('id', 'name')->where('status', config('custom.status.active'))->whereIn('id', $tagId)->get();
+
+        return $tagArr;
     }
 
     /**

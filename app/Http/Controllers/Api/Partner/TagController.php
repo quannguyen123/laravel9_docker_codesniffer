@@ -15,6 +15,18 @@ class TagController extends BaseController
         $this->tagService = $tagService;
     }
 
+    /**
+     * @OA\Get(
+     *     path="/api/public/tag/index",
+     *     summary="Danh sách từ khóa",
+     *     tags={"Public-Tag"},
+     *     security={{"bearer":{}}},
+     *     @OA\Parameter(in="query", name="search", required=false, description="Từ khóa", @OA\Schema(type="string")),
+     *     @OA\Parameter(in="query", name="orderBy", required=false, description="Cột sắp xếp", @OA\Schema(type="string")),
+     *     @OA\Parameter(in="query", name="orderType", required=false, description="Loại sắp xếp: DESC or ASC", @OA\Schema(type="string")),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function index(Request $request) {
         try {
             $tags = $this->tagService->publicSearchTag($request);
@@ -27,6 +39,28 @@ class TagController extends BaseController
         }
     }
 
+    /**
+     * @OA\Post(
+     *     path="/api/public/tag/suggest",
+     *     tags={"Public-Tag"},
+     *     summary="Danh sách từ khóa gợi ý",
+     *     description="",
+     *     security={{"bearer":{}}},
+     *     @OA\RequestBody(
+     *          @OA\JsonContent(),
+     *          @OA\MediaType(
+     *              mediaType="multipart/form-data",
+     *              @OA\Schema(
+     *                  type="object",
+     *                  required={"occupation_id", "job_title_id"},
+     *                  @OA\Property(property="occupation_id", type="integer", format="int64"),
+     *                  @OA\Property(property="job_title_id", type="integer", format="int64")
+     *              )
+     *          ),
+     *     ),
+     *     @OA\Response(response="200", description="An example endpoint")
+     * )
+     */
     public function suggest(Request $request) {
         try {
             $validator = Validator::make($request->all(), [
