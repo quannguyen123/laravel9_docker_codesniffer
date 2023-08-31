@@ -8,6 +8,8 @@ use App\Repositories\CompanyLocationRepository;
 use App\Repositories\CompanyLocationRepositoryEloquent;
 use App\Repositories\CompanyRepository;
 use App\Repositories\CompanyRepositoryEloquent;
+use App\Repositories\DistrictRepository;
+use App\Repositories\DistrictRepositoryEloquent;
 use App\Repositories\JobLocationRepository;
 use App\Repositories\JobLocationRepositoryEloquent;
 use App\Repositories\JobRepository;
@@ -24,6 +26,8 @@ use App\Repositories\PartnerInviteRepository;
 use App\Repositories\PartnerInviteRepositoryEloquent;
 use App\Repositories\PartnerRepository;
 use App\Repositories\PartnerRepositoryEloquent;
+use App\Repositories\ProvinceRepository;
+use App\Repositories\ProvinceRepositoryEloquent;
 use App\Repositories\ServiceRepository;
 use App\Repositories\ServiceRepositoryEloquent;
 use App\Repositories\TagRepository;
@@ -65,5 +69,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(PartnerRepository::class, PartnerRepositoryEloquent::class);
         $this->app->bind(PartnerInviteRepository::class, PartnerInviteRepositoryEloquent::class);
         $this->app->bind(AlertJobRepository::class, AlertJobRepositoryEloquent::class);
+        $this->app->bind(ProvinceRepository::class, ProvinceRepositoryEloquent::class);
+        $this->app->bind(DistrictRepository::class, DistrictRepositoryEloquent::class);
     }
 }

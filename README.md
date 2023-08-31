@@ -1,9 +1,9 @@
+DỰ ÁN: CÔNG TY NƯỚC NGOÀI
+
 #run terminal
 setup: composer require squizlabs/php_codesniffer --dev
 fix code: composer cs-fix
 check error code: composer test
-
-
 
 docker-compose build --no-cache
 docker-compose up -d
@@ -30,4 +30,6 @@ php artisan queue:make
 https://github.com/kimtrien/vietnam-zone
 import dữ liệu provinces và districts
 php artisan vietnamzone:import
+
+
 

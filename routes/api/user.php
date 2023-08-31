@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Partner\AuthController as PartnerAuthController;
 use App\Http\Controllers\Api\Partner\TagController;
 use App\Http\Controllers\Api\Public\JobTitleController;
 use App\Http\Controllers\Api\Public\OccupationController;
+use App\Http\Controllers\Api\Public\ProvinceController;
 use App\Http\Controllers\Api\User\AlertJobController;
 use App\Http\Controllers\Api\User\AuthController;
 use App\Http\Controllers\Api\User\JobController;
@@ -69,6 +70,9 @@ Route::prefix('public')->group(function() {
         Route::get('index', [TagController::class, 'index']);
         Route::post('suggest', [TagController::class, 'suggest']);
     });
+
+    Route::get('list-province', [ProvinceController::class, 'listProvince']);
+    Route::get('list-district-by-province', [ProvinceController::class, 'listDistrictByProvince']);
 });
 
 
